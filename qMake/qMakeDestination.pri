@@ -16,7 +16,7 @@ android{
     DEFINES += IS_QT_ANDROID
 }
 
-#DESTDIR = $$OUT_PWD/../$$TARGET/$${CONFIGURATION}/$${TARGET_ARCH_ABI}
+DESTDIR = $$OUT_PWD/Executable
 OBJECTS_DIR = $$OUT_PWD/.obj
 MOC_DIR = $$OUT_PWD/.moc
 RCC_DIR = $$OUT_PWD/.rcc
@@ -24,7 +24,7 @@ UI_DIR = $$OUT_PWD/.ui
 
 
 win32{
-    DEPLOY_DIR = $$OUT_PWD/$$CONFIGURATION
+    DEPLOY_DIR = $$DESTDIR
 }
 
 android{
