@@ -4,9 +4,9 @@ LIBS += -L$(SDK_ASSIMP)/$$CONFIGURATION/$$TARGET_ARCH_ABI
 LIBS += -lAssimp32
 
 win32 {
-    depends.files = $(SDK_ASSIMP)/$$CONFIGURATION/$$TARGET_ARCH_ABI/Assimp32.dll
-    depends.path = $$DEPLOY_DIR
-    INSTALLS += depends
+    assimp.files = $(SDK_ASSIMP)/$$CONFIGURATION/$$TARGET_ARCH_ABI/Assimp32.dll
+    assimp.path = $$DEPLOY_DIR
+    INSTALLS += assimp
 }
 
 android {
