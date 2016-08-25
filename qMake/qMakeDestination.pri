@@ -17,6 +17,11 @@ android{
 }
 
 DESTDIR = $$OUT_PWD/../$$TARGET/$${CONFIGURATION}/$${TARGET_ARCH_ABI}
+OBJECTS_DIR = $$OUT_PWD/.obj
+MOC_DIR = $$OUT_PWD/.moc
+RCC_DIR = $$OUT_PWD/.rcc
+UI_DIR = $$OUT_PWD/.ui
+
 
 win32{
     DEPLOY_DIR = $$DESTDIR
