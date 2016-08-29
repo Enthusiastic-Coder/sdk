@@ -127,7 +127,7 @@ public:
         double fRadLat = DegreesToRadians(_lat);
         double fRadLng = DegreesToRadians(_lng);
 
-        return Vector3D(sin(fRadLng) * cos( fRadLat ),sin(fRadLat), cos(fRadLng) * cos( fRadLat )).Normalize();
+        return Vector3D(sin(fRadLng) * cos( fRadLat ),sin(fRadLat), cos(fRadLng) * cos( fRadLat )).Unit();
     }
 
     Vector3D Orientation() const

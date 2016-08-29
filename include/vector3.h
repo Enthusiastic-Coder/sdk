@@ -24,7 +24,7 @@ public:
 
     T Magnitude(void) const;
     T MagnitudeXZ(void) const;
-    Vector3<T>& Normalize(void);
+    void Normalize(void);
     Vector3<T> Unit() const;
     void  Reverse(void);
     T SumComponents();
@@ -121,23 +121,25 @@ inline	T Vector3<T>::MagnitudeXZ(void) const
 template<typename T>
 inline	Vector3<T> Vector3<T>::Unit() const
 {
-    return Vector3<T>(*this).Normalize();
+    Vector3<T> v(*this);
+    v.Normalize();
+    return v;
 }
 
 template<>
-inline	Vector3<double>&  Vector3<double>::Normalize(void)
+inline void Vector3<double>::Normalize(void)
 {
     double m = Magnitude();
     if(m <= std::numeric_limits<double>::epsilon()) m = 1;
-    return operator/=(m);
+    operator/=(m);
 }
 
 template<>
-inline	Vector3<float>&  Vector3<float>::Normalize(void)
+inline void Vector3<float>::Normalize(void)
 {
     float m = Magnitude();
     if(m <= std::numeric_limits<float>::epsilon()) m = 1;
-    return operator/=(m);
+    operator/=(m);
 }
 
 template<typename T>
