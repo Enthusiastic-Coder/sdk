@@ -15,6 +15,11 @@ template<typename T>
 class MathSupport
 {
 public:
+    struct size
+    {
+        T width;
+        T height;
+    };
 
     static Quarternion<T> MakeQPitch(T ang)
     {
