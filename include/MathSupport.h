@@ -21,6 +21,12 @@ public:
         T height;
     };
 
+    struct point
+    {
+        T x;
+        T y;
+    };
+
     static Quarternion<T> MakeQPitch(T ang)
     {
         T fRad = DegreesToRadians( -ang/2 );
