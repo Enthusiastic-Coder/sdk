@@ -67,8 +67,6 @@ public:
 
     bool InFrustum(const Frustum& frustum) const
     {
-        double dist = 0;
-
         for (int i = 0; i < Frustum::Frustrum_Plane_Count; ++i)
         {
             if( !InFrustum( frustum, i ) )
