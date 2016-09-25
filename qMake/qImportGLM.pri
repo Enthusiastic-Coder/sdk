@@ -1,2 +1,0 @@
-INCLUDEPATH += $$(SDK_GLM)
-
