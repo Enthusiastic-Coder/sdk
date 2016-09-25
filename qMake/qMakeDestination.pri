@@ -16,7 +16,7 @@ android{
     DEFINES += IS_QT_ANDROID
 }
 
-DESTDIR = $$OUT_PWD/Executable
+DESTDIR = $$OUT_PWD/$$CONFIGURATION
 OBJECTS_DIR = $$OUT_PWD/.obj
 MOC_DIR = $$OUT_PWD/.moc
 RCC_DIR = $$OUT_PWD/.rcc

@@ -1,10 +1,10 @@
 INCLUDEPATH += $(SDK_ASSIMP)/include
 
-LIBS += -L$(SDK_ASSIMP)/$$CONFIGURATION/$$TARGET_ARCH_ABI
+LIBS += -L$$(SDK_ASSIMP)/$$CONFIGURATION
 LIBS += -lAssimp32
 
 win32 {
-    assimp.files = $(SDK_ASSIMP)/$$CONFIGURATION/$$TARGET_ARCH_ABI/Assimp32.dll
+    assimp.files = $$(SDK_ASSIMP)/$$CONFIGURATION/Assimp32.dll
     assimp.path = $$DEPLOY_DIR
     INSTALLS += assimp
 }
