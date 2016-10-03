@@ -29,17 +29,6 @@ public:
         return ToLocal( _Location + QVRotate( qOrientation, pt ) );
     }
 
-    std::vector<Vector3F> ToLocal( const std::vector<GPSLocation> &gpsPts ) const
-    {
-        std::vector<Vector3F> pts;
-        pts.resize( gpsPts.size() );
-
-        for( size_t i = 0; i < gpsPts.size(); ++i )
-            pts[i] = ToLocal( gpsPts[i].position() );
-
-        return pts;
-    }
-
     Vector3F ToLocal( GPSLocation gps ) const
     {
         return ToLocal( gps.position() );
