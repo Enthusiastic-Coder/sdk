@@ -9,7 +9,6 @@ class GPSModelTransform
 {
 public:
 
-
     GPSModelTransform()
     {
     }
@@ -23,17 +22,6 @@ public:
     {
         _Location = location;
         _qAntiOrientation = ~_Location.makeQ();
-    }
-
-    std::vector<Vector3F> LocalFlatToLocal( const std::vector<Vector3F>& inPts, QuarternionF qOrientation = QuarternionF::Q0() ) const
-    {
-        std::vector<Vector3F> pts;
-        pts.resize( inPts.size() );
-
-        for( auto &it : inPts )
-            const_cast<Vector3F&>(it) = LocalFlatToLocal( it );
-
-        return pts;
     }
 
     Vector3F LocalFlatToLocal( Vector3F pt, QuarternionF qOrientation = QuarternionF::Q0() ) const
