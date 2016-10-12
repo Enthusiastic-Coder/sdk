@@ -117,6 +117,11 @@ public:
 		return _cgOffset;
 	}
 
+        void setMOIFactor(float f)
+        {
+            _moiFactor = f;
+        }
+
 	Vector3F CG() const
 	{
 		return _massDistance/TotalMass() + CgOffset();
@@ -124,7 +129,7 @@ public:
 
 	Matrix3x3F MOI() const
 	{
-		return _MOI;
+                return _MOI * _moiFactor;
 	}
 
 	float TotalMass() const 
@@ -139,7 +144,7 @@ public:
 
 	void CalcInvMOI()
 	{
-		_INVMOI = _MOI.Inverse();
+                _INVMOI = MOI().Inverse();
 	}
 
 protected:
@@ -225,5 +230,6 @@ private:
 	float _c2;
 	float _sig;
 	float _i_i;
+        float _moiFactor = 1.0f;
 };
 
