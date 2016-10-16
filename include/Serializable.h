@@ -35,6 +35,7 @@ struct IReadStream
     virtual void Read(Vector4F&) = 0;
     virtual void Read(Vector3D&) = 0;
     virtual void Read(Vector2D&) = 0;
+    virtual void Read(Vector2F&) = 0;
     virtual void Read(Matrix3x3F&) = 0;
     virtual void Read(Matrix3x3D&) = 0;
     virtual void Read(Matrix4x4F&) = 0;
@@ -64,6 +65,7 @@ struct IWriteStream
     virtual void Write(const Vector4F&) = 0;
     virtual void Write(const Vector3D&) = 0;
     virtual void Write(const Vector2D&) = 0;
+    virtual void Write(const Vector2F&) = 0;
     virtual void Write(const Matrix3x3F&) = 0;
     virtual void Write(const Matrix3x3D&) = 0;
     virtual void Write(const Matrix4x4F&) = 0;
