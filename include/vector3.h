@@ -8,6 +8,7 @@
 
 #include <limits>
 #include <cmath>
+#include <string>
 
 template<typename T>
 class Vector3
@@ -21,6 +22,9 @@ public:
     // constructor
     Vector3(void);
     Vector3(T xi, T yi, T zi);
+    Vector3(std::string str);
+
+    std::string toString() const;
 
     T Magnitude(void) const;
     T MagnitudeXZ(void) const;
@@ -96,6 +100,23 @@ inline Vector3<T>::Vector3(T xi, T yi, T zi)
     x = xi;
     y = yi;
     z = zi;
+}
+
+template<typename T>
+inline Vector3<T>::Vector3(std::string str)
+{
+    std::stringstream ss(str);
+    ss.precision(9);
+    ss >> x >> y >> z;
+}
+
+template<typename T>
+inline std::string Vector3<T>::toString() const
+{
+    std::stringstream ss;
+    ss.precision(9);
+    ss << x << " " << y << " " << z;
+    return ss.str();
 }
 
 template <typename T>

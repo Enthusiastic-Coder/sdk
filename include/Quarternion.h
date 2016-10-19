@@ -21,6 +21,9 @@ public:
 
     Quarternion(void);
     Quarternion(T e0, T e1, T e2, T e3);
+    Quarternion(std::string str);
+
+    std::string toString() const;
 
     void Reset();
     T	Magnitude(void) const;
@@ -56,6 +59,23 @@ inline Quarternion<T>::Quarternion(T e0, T e1, T e2, T e3)
     v.x = e1;
     v.y = e2;
     v.z = e3;
+}
+
+template<typename T>
+Quarternion<T>::Quarternion(std::string str)
+{
+    std::stringstream ss(str);
+    ss.precision(9);
+    ss >> n >> v.x >> v.y >> v.z;
+}
+
+template<typename T>
+std::string Quarternion<T>::toString() const
+{
+    std::stringstream ss;
+    ss.precision(9);
+    ss << n << " " << v.x << " " << v.y << " " << v.z;
+    return ss.str();
 }
 
 template<typename T>

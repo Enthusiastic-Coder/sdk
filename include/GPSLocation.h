@@ -47,14 +47,14 @@ public:
     GPSLocation(std::string str)
     {
         std::stringstream ss(str);
-        ss.precision(6);
+        ss.precision(9);
         ss >> _lat >> _lng >> _height;
     }
 
     std::string toString() const
     {
         std::stringstream ss;
-        ss.precision(6);
+        ss.precision(9);
         ss << _lat << " " << _lng << " " << _height;
         return ss.str();
     }
