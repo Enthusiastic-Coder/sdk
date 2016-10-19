@@ -98,6 +98,8 @@
     size_t count(0); \
     pIStream->Read( count ); \
     col.resize( count ); \
+    for(int i=0; i < count; ++i) \
+        col[i] = new std::remove_reference<decltype( *col[0])>::type; \
     for( auto &it : col ) \
 { \
     it->Read( pIStream );\
