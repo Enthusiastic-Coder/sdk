@@ -7,6 +7,7 @@
 
 #include "vector3.h"
 #include "Plane.h"
+#include <limits>
 
 class BoundaryHelperT
 {
