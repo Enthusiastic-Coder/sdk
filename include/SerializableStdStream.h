@@ -44,7 +44,6 @@ public:
         os.write( (const char*) &t, sizeof(T ) );
     }
 
-    template<>
     void Write( std::ofstream& os, const std::string& str )
     {
         size_t length( str.length() );
@@ -98,7 +97,6 @@ public:
         is.read( (char*) &t, sizeof(T ) );
     }
 
-    template<>
     void Read( std::ifstream& is, std::string& str )
     {
         size_t length;
