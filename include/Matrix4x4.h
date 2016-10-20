@@ -178,7 +178,7 @@ public:
         PlaneF& plane = frustum.plane[face];
         int row = frustumScale[face];
         int scale = (row < 0) ? -1 : 1;
-        row = (abs(row) - 1) * 4;
+        row = (std::abs(row) - 1) * 4;
 
         Matrix4x4<float> mat( toFloat() );
 
