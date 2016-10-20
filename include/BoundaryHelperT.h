@@ -6,6 +6,7 @@
 
 #include "vector3.h"
 #include "Plane.h"
+#include <limits>
 
 class BoundaryHelperT
 {
@@ -36,12 +37,12 @@ public:
         float u1 = 0.0f;
         float u2 = 0.0f;
 
-        if( fabs(d1) < FLT_EPSILON )
+        if( fabs(d1) < std::numeric_limits<float>::epsilon() )
             u1 = 0.0f;
         else
             u1 = ((p - boundary[0])*d.Unit()) / d1;
 
-        if( fabs(d2) < FLT_EPSILON )
+        if( fabs(d2) < std::numeric_limits<float>::epsilon() )
             u2 = 0.0f;
         else
             u2 = ((p - boundary[3])*d.Unit()) / d2;

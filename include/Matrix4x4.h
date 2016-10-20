@@ -3,6 +3,7 @@
 #include "Frustum.h"
 #include "GPSLocation.h"
 #include "vector3.h"
+#include <limits>
 
 template<class T=MathSupportType>
 class Matrix4x4
@@ -118,7 +119,7 @@ public:
                 + m13 * (m21*(m32*m44 - m42*m34) - m22*(m31*m44 - m41*m34) + m24 *(m31*m42 - m41*m32))
                 - m14 * (m21*(m32*m43 - m42*m33) - m22*(m31*m43 - m41*m33) + m23 *(m31*m42 - m41*m32));
 
-        if( fabs(det) < FLT_EPSILON )
+        if( fabs(det) < std::numeric_limits<float>::epsilon() )
             return m;
 
         m.m11=m22*m33*m44+m23*m34*m42+m24*m32*m43-m22*m34*m43-m23*m32*m44-m24*m33*m42;
@@ -179,7 +180,7 @@ public:
         int scale = (row < 0) ? -1 : 1;
         row = (abs(row) - 1) * 4;
 
-        Matrix4x4F mat( toFloat() );
+        Matrix4x4<float> mat( toFloat() );
 
         plane.N.x = mat[12] + scale * mat[row];
         plane.N.y = mat[13] + scale * mat[row + 1];
@@ -409,42 +410,42 @@ public:
 
     bool operator==(const Matrix4x4<double>& m) const
     {
-        return fabs(this->m11 - m.m11) < DBL_EPSILON
-                && fabs(this->m12 - m.m12) < DBL_EPSILON
-                && fabs(this->m13 - m.m13) < DBL_EPSILON
-                && fabs(this->m14 - m.m14) < DBL_EPSILON
-                && fabs(this->m21 - m.m21) < DBL_EPSILON
-                && fabs(this->m22 - m.m22) < DBL_EPSILON
-                && fabs(this->m23 - m.m23) < DBL_EPSILON
-                && fabs(this->m24 - m.m24) < DBL_EPSILON
-                && fabs(this->m31 - m.m31) < DBL_EPSILON
-                && fabs(this->m32 - m.m32) < DBL_EPSILON
-                && fabs(this->m33 - m.m33) < DBL_EPSILON
-                && fabs(this->m34 - m.m34) < DBL_EPSILON
-                && fabs(this->m41 - m.m41) < DBL_EPSILON
-                && fabs(this->m42 - m.m42) < DBL_EPSILON
-                && fabs(this->m43 - m.m43) < DBL_EPSILON
-                && fabs(this->m44 - m.m44) < DBL_EPSILON;
+        return fabs(this->m11 - m.m11) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m12 - m.m12) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m13 - m.m13) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m14 - m.m14) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m21 - m.m21) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m22 - m.m22) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m23 - m.m23) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m24 - m.m24) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m31 - m.m31) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m32 - m.m32) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m33 - m.m33) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m34 - m.m34) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m41 - m.m41) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m42 - m.m42) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m43 - m.m43) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m44 - m.m44) < std::numeric_limits<float>::epsilon();
     }
 
     bool operator==(const Matrix4x4<float>& m) const
     {
-        return fabs(this->m11 - m.m11) < FLT_EPSILON
-                && fabs(this->m12 - m.m12) < FLT_EPSILON
-                && fabs(this->m13 - m.m13) < FLT_EPSILON
-                && fabs(this->m14 - m.m14) < FLT_EPSILON
-                && fabs(this->m21 - m.m21) < FLT_EPSILON
-                && fabs(this->m22 - m.m22) < FLT_EPSILON
-                && fabs(this->m23 - m.m23) < FLT_EPSILON
-                && fabs(this->m24 - m.m24) < FLT_EPSILON
-                && fabs(this->m31 - m.m31) < FLT_EPSILON
-                && fabs(this->m32 - m.m32) < FLT_EPSILON
-                && fabs(this->m33 - m.m33) < FLT_EPSILON
-                && fabs(this->m34 - m.m34) < FLT_EPSILON
-                && fabs(this->m41 - m.m41) < FLT_EPSILON
-                && fabs(this->m42 - m.m42) < FLT_EPSILON
-                && fabs(this->m43 - m.m43) < FLT_EPSILON
-                && fabs(this->m44 - m.m44) < FLT_EPSILON;
+        return fabs(this->m11 - m.m11) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m12 - m.m12) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m13 - m.m13) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m14 - m.m14) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m21 - m.m21) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m22 - m.m22) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m23 - m.m23) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m24 - m.m24) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m31 - m.m31) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m32 - m.m32) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m33 - m.m33) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m34 - m.m34) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m41 - m.m41) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m42 - m.m42) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m43 - m.m43) < std::numeric_limits<float>::epsilon()
+                && fabs(this->m44 - m.m44) < std::numeric_limits<float>::epsilon();
     }
 
     Vector4<T> operator*(const Vector4<T>& v) const

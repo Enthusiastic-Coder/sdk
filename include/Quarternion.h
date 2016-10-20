@@ -5,6 +5,7 @@
 
 #include "MathSupport.h"
 #include <limits>
+#include <sstream>
 
 template<typename T>
 class Quarternion
