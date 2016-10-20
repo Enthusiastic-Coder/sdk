@@ -2,13 +2,14 @@
 
 #include "MathSupport.h"
 #include "BoundaryHelperT.h"
+#include <limits>
 
 class MeshHelper
 {
 public:
     static void normalizeCentroid( Vector3F& centroidLocation, float fTotalArea, size_t polyCount )
     {
-        if( fabs(fTotalArea) > FLT_EPSILON )
+        if( fabs(fTotalArea) > std::numeric_limits<float>::epsilon() )
         {
             centroidLocation.y /= fTotalArea;
         }

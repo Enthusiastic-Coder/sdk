@@ -9,6 +9,7 @@
 #include <limits>
 #include <cmath>
 #include <string>
+#include <sstream>
 
 template<typename T>
 class Vector3

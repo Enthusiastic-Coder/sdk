@@ -1,5 +1,7 @@
 #pragma once
 
+#include <limits>
+
 template<typename T> class Matrix4x4;
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -157,7 +159,7 @@ inline Matrix3x3<T> Matrix3x3<T>::Inverse(void) const
             e31*e12*e23 -
             e31*e22*e13;
 
-    if (fabs(d) < FLT_EPSILON )
+    if (fabs(d) < std::numeric_limits<float>::epsilon() )
         d = 1;
 
     return	Matrix3x3<T>(	(e22*e33-e23*e32)/d,
