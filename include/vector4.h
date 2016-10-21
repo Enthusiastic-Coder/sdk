@@ -155,6 +155,11 @@ public:
         return reinterpret_cast<T*>(this);
     }
 
+    const T* ptr() const
+	{
+		return reinterpret_cast<const T*>(this);
+	}
+
     Vector4<double> toDouble()
     {
         return Vector4<double>(x, y, z, w);
