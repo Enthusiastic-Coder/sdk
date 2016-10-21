@@ -65,6 +65,11 @@ public:
         return Vector3<double>(x, y, z );
     }
 
+    const T* ptr() const
+    {
+    	return reinterpret_cast<const T*>(this);
+    }
+
     T* ptr()
     {
         return reinterpret_cast<T*>(this);
