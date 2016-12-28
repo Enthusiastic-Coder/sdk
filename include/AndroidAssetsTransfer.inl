@@ -1,10 +1,11 @@
+#ifdef IS_QT_ANDROID
 #include <QDir>
 #include <QString>
 #include <QStringList>
 
 static void copyAssets(bool bOverWrite)
 {
-#ifdef IS_QT_ANDROID
+
     QDir curDir(QDir::current());
     QString assets("assets:/");
 
@@ -28,6 +29,13 @@ static void copyAssets(bool bOverWrite)
             QFile::copy(assets+ assetFullName, assetFullName);
         }
     }
-#endif
 }
+#else
+
+static void copyAssets(bool)
+{
+    //assets not needed to be copied.
+}
+
+#endif
 
