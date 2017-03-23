@@ -39,7 +39,7 @@ public:
     }
 
     GPSLocation( const GPSLocation &p, double fHeight)
-        : _lat(p._lat), _lng(p._lng), _height(p._height)
+        : _lat(p._lat), _lng(p._lng), _height(fHeight)
     {
 
     }
