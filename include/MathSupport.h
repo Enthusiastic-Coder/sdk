@@ -188,6 +188,14 @@ public:
         if( v.y < 0 ) v.y+=360;
         return v;
     }
+
+    static T normAng(T angle)
+    {
+        T x = fmod(angle, 360);
+        if( x < 0)
+            x +=360;
+        return x;
+    }
 };
 
 
