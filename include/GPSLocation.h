@@ -47,6 +47,7 @@ public:
     GPSLocation(std::string str)
     {
         std::stringstream ss(str);
+        _lat = _lng = _height = 0;
         ss.precision(9);
         ss >> _lat >> _lng >> _height;
     }
