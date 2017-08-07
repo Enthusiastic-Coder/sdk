@@ -1,8 +1,5 @@
 #pragma once
 
-typedef Euler<float> EulerF;
-typedef Euler<double> EulerD;
-
 template<typename T>
 class Euler
 {
@@ -20,3 +17,6 @@ public:
     T _heading;
     T _bank;
 };
+
+typedef Euler<float> EulerF;
+typedef Euler<double> EulerD;
