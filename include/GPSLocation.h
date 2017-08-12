@@ -337,15 +337,6 @@ public:
         return Vector3F( float(dDist * sin(dBear)), float(gpsLocation._height - _height), float(-dDist * cos(dBear)) );
     }
 
-    bool insideSquare( const GPSLocation& topLeft, const GPSLocation& bottomRight) const
-    {
-        if( _lat > topLeft._lat) return false;
-        if( _lng < topLeft._lng) return false;
-        if( _lat < bottomRight._lat) return false;
-        if( _lng > bottomRight._lng) return false;
-        return true;
-    }
-
     template<class T>
     GPSLocation GetShadowLocation( T heightAbovePlane, const Vector4<T>& lightDir ) const
     {
