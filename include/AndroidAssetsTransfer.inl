@@ -1,11 +1,9 @@
-#ifdef IS_QT_ANDROID
 #include <QDir>
 #include <QString>
 #include <QStringList>
 
-static void copyAssets(bool bOverWrite)
+static void copyAssets(bool bOverWrite, QStringList ignoreFolderList)
 {
-
     QDir curDir(QDir::current());
     QString assets("assets:/");
 
@@ -14,6 +12,20 @@ static void copyAssets(bool bOverWrite)
     foreach(QString assetFolder, assetFolderList)
     {
         if( assetFolder.startsWith("--"))
+            continue;
+
+        bool bIgnoreFile(false);
+
+        for(const QString& folder:ignoreFolderList)
+        {
+            if( assetFolder.startsWith(folder))
+            {
+                bIgnoreFile = true;
+                break;
+            }
+        }
+
+        if(bIgnoreFile)
             continue;
 
         bool b3 = curDir.mkdir(assetFolder);
@@ -30,12 +42,4 @@ static void copyAssets(bool bOverWrite)
         }
     }
 }
-#else
-
-static void copyAssets(bool)
-{
-    //assets not needed to be copied.
-}
-
-#endif
 
