@@ -223,6 +223,12 @@ public:
     }
 
     template<class T>
+    GPSLocation& operator-=(const Vector3<T> & p)
+    {
+        return operator+=(-p);
+    }
+
+    template<class T>
     GPSLocation& operator+=(const Vector3<T> & p)
     {
         double lat1 = LatRad();
