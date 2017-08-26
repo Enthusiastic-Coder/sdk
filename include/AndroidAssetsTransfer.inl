@@ -25,10 +25,10 @@ static void copyAssets(bool bOverWrite, QStringList ignoreFolderList)
             }
         }
 
+        bool b3 = curDir.mkdir(assetFolder);
+
         if(bIgnoreFile)
             continue;
-
-        bool b3 = curDir.mkdir(assetFolder);
 
         QStringList listofFiles = QDir(assets + assetFolder).entryList(QDir::NoDotAndDotDot|QDir::Files);
 
@@ -43,3 +43,9 @@ static void copyAssets(bool bOverWrite, QStringList ignoreFolderList)
     }
 }
 
+static void ExtractAsset(const QString filePath, bool bOverwrite=true)
+{
+    QString fullFilePath= QString("assets:/%0").arg(filePath);
+    if(bOverwrite)  QFile::remove(filePath);
+    QFile::copy( fullFilePath, filePath);
+}
