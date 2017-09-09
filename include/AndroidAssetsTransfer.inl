@@ -45,6 +45,9 @@ static void copyAssets(bool bOverWrite, QStringList ignoreFolderList)
 
 static void ExtractAsset(const QString filePath, bool bOverwrite=true)
 {
+#ifndef ANDROID
+    return;
+#endif
     QString fullFilePath= QString("assets:/%0").arg(filePath);
     if(bOverwrite)  QFile::remove(filePath);
     QFile::copy( fullFilePath, filePath);
