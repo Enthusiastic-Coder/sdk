@@ -1,45 +1,80 @@
 #include <QDir>
 #include <QString>
 #include <QStringList>
+#include <QDirIterator>
 
-static void copyAssets(bool bOverWrite, QStringList ignoreFolderList)
+static void copyFileAsset(bool bOverWrite, const QFileInfo& fileInfo)
 {
-    QDir curDir(QDir::current());
     QString assets("assets:/");
+    QString assetFolder = fileInfo.absolutePath();
+    assetFolder.remove(0, 8);
+    QDir curDir(QDir::current());
 
-    QStringList assetFolderList = QDir(assets).entryList(QDir::NoDotAndDotDot|QDir::Dirs);
+    bool b3 = curDir.mkpath(assetFolder);
 
-    foreach(QString assetFolder, assetFolderList)
+    QString assetFullName = assetFolder + "/" + fileInfo.fileName();
+    if( bOverWrite && QFile::exists(assetFullName))
     {
-        if( assetFolder.startsWith("--"))
-            continue;
+        qDebug() << "remove :" << assetFullName;
+        QFile::remove(assetFullName);
+    }
 
-        bool bIgnoreFile(false);
+    bool bCopyOk = QFile::copy(assets+ assetFullName, assetFullName);
+    qDebug() << "copy : " << (assets+assetFullName) << " -to- " << assetFullName << " : " << bCopyOk;
+}
 
-        for(const QString& folder:ignoreFolderList)
+static QString rootFolder = "assets:/";
+
+static void copyAssets(bool bOverWrite, QStringList ignoreFolderList, QString rootdirName=rootFolder)
+{
+    if( rootdirName == rootFolder)
+    {
+        qDebug() << "begin: copyAssets ";
+        qDebug() << rootdirName;
+        qDebug() << bOverWrite;
+        qDebug() << ignoreFolderList;
+    }
+    else
+    {
+        qDebug() << "Folder:" << rootdirName;
+    }
+
+    QDirIterator it(rootdirName, QDirIterator::Subdirectories);
+
+    while (it.hasNext())
+    {
+        QString dirFilename = it.next();
+
+        if( it.fileInfo().isDir())
         {
-            if( assetFolder.startsWith(folder))
+            if( dirFilename.contains("androiddeployqt"))
+                continue;
+
+            bool bIgnore(false);
+            for(const QString& ignoreFolder:ignoreFolderList)
+                if( dirFilename == ignoreFolder)
+                {
+                    bIgnore = true;
+                    break;
+                }
+
+            if( bIgnore)
             {
-                bIgnoreFile = true;
-                break;
+                qDebug() << "Ignored : " << dirFilename;
+                continue;
             }
+
+            copyAssets(bOverWrite, ignoreFolderList, dirFilename);
         }
-
-        bool b3 = curDir.mkdir(assetFolder);
-
-        if(bIgnoreFile)
-            continue;
-
-        QStringList listofFiles = QDir(assets + assetFolder).entryList(QDir::NoDotAndDotDot|QDir::Files);
-
-        foreach(QString filename,listofFiles)
+        else
         {
-            QString assetFullName = assetFolder + "/" + filename;
-            if( bOverWrite && QFile::exists(assetFullName))
-                QFile::remove(assetFullName);
-
-            QFile::copy(assets+ assetFullName, assetFullName);
+            copyFileAsset(bOverWrite, it.fileInfo());
         }
+    }
+
+    if(rootdirName == rootFolder)
+    {
+        qDebug() << "end: copyAssets ";
     }
 }
 
@@ -50,5 +85,8 @@ static void ExtractAsset(const QString filePath, bool bOverwrite=true)
 #endif
     QString fullFilePath= QString("assets:/%0").arg(filePath);
     if(bOverwrite)  QFile::remove(filePath);
+    QFileInfo fi(filePath);
+    QDir dir(QDir::currentPath());
+    dir.mkpath(fi.absolutePath());
     QFile::copy( fullFilePath, filePath);
 }
