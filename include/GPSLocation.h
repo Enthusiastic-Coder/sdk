@@ -18,20 +18,44 @@ public:
         return euler;
     }
 
-    static GPSLocation FromDegMinSec(const std::string str)
+    static GPSLocation FromDegMin(const std::string & str)
     {
-        //N520555 W0005756 - 16 chars long
-        if( str.length() < 16)
+        //N5944.46	E00526.39
+        if( str.length() <16)
             return GPSLocation();
+
+        GPSLocation loc;
+        loc._lat = std::atof(str.substr(1,2).c_str());
+        loc._lat += std::atof(str.substr(3,4).c_str())/60.0;
+
+        loc._lng = std::atof(str.substr(10,3).c_str());
+        loc._lng += std::atof(str.substr(13, 4).c_str())/60.0;
+
+        if( str[0] != 'N')
+            loc._lat = -loc._lat;
+
+        if( str[9] == 'W')
+            loc._lng = -loc._lng;
+
+        return loc;
+    }
+
+    static GPSLocation FromDegMinSec(const std::string& str)
+    {
+        //N520555 W0005756 - 16 chars long4
+        if( str.length() < 15)
+            return GPSLocation();
+
+        bool bNarrow = str.length() == 15;
 
         GPSLocation loc;
         loc._lat = std::atof(str.substr(1, 2).c_str());
         loc._lat += std::atof(str.substr(3, 2).c_str())/60.0;
         loc._lat += std::atof(str.substr(5,2).c_str())/3600.0;
 
-        loc._lng = std::atof(str.substr(9, 3).c_str());
-        loc._lng += std::atof(str.substr(12,2).c_str())/60.0;
-        loc._lng += std::atof(str.substr(14,2).c_str())/3600.0;
+        loc._lng = std::atof(str.substr(9, bNarrow?2:3).c_str());
+        loc._lng += std::atof(str.substr(bNarrow?11:12,2).c_str())/60.0;
+        loc._lng += std::atof(str.substr(bNarrow?13:14,2).c_str())/3600.0;
 
         if( str[0] != 'N')
             loc._lat = -loc._lat;
