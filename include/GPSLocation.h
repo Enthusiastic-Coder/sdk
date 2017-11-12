@@ -348,6 +348,12 @@ public:
         return !operator==(gps);
     }
 
+    bool sameAs( const GPSLocation& gps)
+    {
+        return fabs(_lat - gps._lat) < std::numeric_limits<float>::epsilon()
+                && fabs(_lng - gps._lng) < std::numeric_limits<float>::epsilon();
+    }
+
     GPSLocation operator-()
     {
         GPSLocation negGPS;
