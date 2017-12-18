@@ -3,6 +3,25 @@
 #include <QStringList>
 #include <QDirIterator>
 
+static bool MyCopyFromTo(QString from, QString to)
+{
+    bool ok= false;
+    QFile fInput(from);
+    if(fInput.open(QFile::ReadOnly))
+    {
+        QFile fOutput(to);
+        if(fOutput.open(QFile::WriteOnly))
+        {
+            ok = true;
+            fOutput.write(fInput.readAll());
+            fOutput.close();
+        }
+        fInput.close();
+    }
+
+    return ok;
+}
+
 static void copyFileAsset(bool bOverWrite, const QFileInfo& fileInfo)
 {
     QString assets("assets:/");
@@ -19,7 +38,7 @@ static void copyFileAsset(bool bOverWrite, const QFileInfo& fileInfo)
         QFile::remove(assetFullName);
     }
 
-    bool bCopyOk = QFile::copy(assets+ assetFullName, assetFullName);
+    bool bCopyOk = MyCopyFromTo(assets+ assetFullName, assetFullName);
     qDebug() << "copy : " << (assets+assetFullName) << " -to- " << assetFullName << " : " << bCopyOk;
 }
 
@@ -85,5 +104,5 @@ static void ExtractAsset(const QString filePath, bool bOverwrite=true)
     QFileInfo fi(filePath);
     QDir dir(QDir::currentPath());
     dir.mkpath(fi.absolutePath());
-    QFile::copy( fullFilePath, filePath);
+    MyCopyFromTo(fullFilePath, filePath);
 }
