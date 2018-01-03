@@ -409,8 +409,10 @@ public:
         double dLng = DegreesToRadians( gpsLocation._lng - _lng );
         double lat1 = LatRad();
         double lat2 = gpsLocation.LatRad();
+        double dSinLat2 = sin( dLat/2);
+        double dSinLng2 = sin( dLng/2);
 
-        double a = sin( dLat/2 ) * sin( dLat/2) + sin( dLng/2) * sin( dLng/2) * cos( lat1 ) * cos( lat2 );
+        double a = dSinLat2 * dSinLat2 + dSinLng2 * dSinLng2 * cos( lat1 ) * cos( lat2 );
         double c = 2 * atan2( sqrt(a), sqrt(1-a) );
 
         return EarthRadius() * c;
