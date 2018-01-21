@@ -106,3 +106,28 @@ static void ExtractAsset(const QString filePath, bool bOverwrite=true)
     dir.mkpath(fi.absolutePath());
     MyCopyFromTo(fullFilePath, filePath);
 }
+
+
+class AssetTempExtractor
+{
+public:
+    AssetTempExtractor( const QStringList& fileList)
+        :_fileList(fileList)
+    {
+#ifdef Q_OS_ANDROID
+        for(const QString& fileName:_fileList)
+            ExtractAsset(fileName);
+#endif
+    }
+
+#ifdef Q_OS_ANDROID
+    ~AssetTempExtractor()
+    {
+        for(const QString& fileName:_fileList)
+            QFile::remove(fileName);
+    }
+#endif
+
+private:
+    const QStringList& _fileList;
+};
