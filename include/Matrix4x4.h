@@ -535,8 +535,8 @@ public:
         operator*=(m);
     }
 
-    void ApplyModelMatrix(const GPSLocation& loc);
-    void ApplyViewMatrix(const GPSLocation& loc);
+    void ApplyModelMatrix(const GPSLocation& loc, bool ignoreHeight=false);
+    void ApplyViewMatrix(const GPSLocation& loc, bool ignoreHeight=false);
 
     const T* ptr() const
     {
@@ -624,7 +624,7 @@ inline void Matrix4x4<T>::LookAt(const GPSLocation& eye, const GPSLocation& cent
 }
 
 template<class T>
-inline void Matrix4x4<T>::ApplyModelMatrix(const GPSLocation& loc)
+inline void Matrix4x4<T>::ApplyModelMatrix(const GPSLocation& loc, bool ignoreHeight)
 {
     Matrix4x4<T> m;
     m.LoadIdentity();
@@ -632,16 +632,16 @@ inline void Matrix4x4<T>::ApplyModelMatrix(const GPSLocation& loc)
     m.RotateY(loc._lng);
     m.RotateX(-loc._lat);
     m *= ToNonLocalGPS0Matrix4x4::get();
-    m.Translate(0, loc._height, 0);
+    if( !ignoreHeight) m.Translate(0, loc._height, 0);
     operator *= (m);
 }
 
 template<class T>
-inline void Matrix4x4<T>::ApplyViewMatrix(const GPSLocation& loc)
+inline void Matrix4x4<T>::ApplyViewMatrix(const GPSLocation& loc, bool ignoreHeight)
 {
     Matrix4x4<T> m;
     m.LoadIdentity();
-    m.Translate(0, -loc._height, 0);
+    if( !ignoreHeight) m.Translate(0, -loc._height, 0);
     m *= ToLocalGPS0Matrix4x4::get();
     m.RotateX(loc._lat);
     m.RotateY(-loc._lng);
