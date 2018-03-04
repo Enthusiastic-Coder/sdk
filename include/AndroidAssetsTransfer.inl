@@ -42,7 +42,7 @@ static void copyFileAsset(bool bOverWrite, const QFileInfo& fileInfo)
     qDebug() << "copy : " << (assets+assetFullName) << " -to- " << assetFullName << " : " << bCopyOk;
 }
 
-static QString rootFolder = "assets:/";
+#define rootFolder "assets:/"
 
 static void copyAssets(bool bOverWrite, QStringList ignoreFolderList, QString rootdirName=rootFolder)
 {
