@@ -5,21 +5,7 @@
 
 static bool MyCopyFromTo(QString from, QString to)
 {
-    bool ok= false;
-    QFile fInput(from);
-    if(fInput.open(QFile::ReadOnly))
-    {
-        QFile fOutput(to);
-        if(fOutput.open(QFile::WriteOnly))
-        {
-            ok = true;
-            fOutput.write(fInput.readAll());
-            fOutput.close();
-        }
-        fInput.close();
-    }
-
-    return ok;
+    return QFile::copy(from, to);
 }
 
 static void copyFileAsset(bool bOverWrite, const QFileInfo& fileInfo)
