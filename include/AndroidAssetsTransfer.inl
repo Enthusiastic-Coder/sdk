@@ -2,6 +2,7 @@
 #include <QString>
 #include <QStringList>
 #include <QDirIterator>
+#include <QDebug>
 
 static bool MyCopyFromTo(QString from, QString to)
 {
