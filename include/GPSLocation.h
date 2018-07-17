@@ -41,54 +41,43 @@ public:
         return loc;
     }
 
-    static GPSLocation FromDegMinSec(const std::string& str)
+    static GPSLocation FromDMS(const std::string& str)
     {
-        //N520555 W0005756 - 16 chars long4
         if( str.length() < 15)
             return GPSLocation();
 
         bool bNarrow = str.length() == 15;
+        int offset = 0;
+
+        if( str[0] == 'N' || str[1] == 'S')
+            offset = 1;
 
         GPSLocation loc;
-        loc._lat = std::atof(str.substr(1, 2).c_str());
-        loc._lat += std::atof(str.substr(3, 2).c_str())/60.0;
-        loc._lat += std::atof(str.substr(5,2).c_str())/3600.0;
 
-        loc._lng = std::atof(str.substr(9, bNarrow?2:3).c_str());
-        loc._lng += std::atof(str.substr(bNarrow?11:12,2).c_str())/60.0;
-        loc._lng += std::atof(str.substr(bNarrow?13:14,2).c_str())/3600.0;
+        loc._lat = std::atof(str.substr(offset, 2).c_str());
+        loc._lat += std::atof(str.substr(offset+2, 2).c_str())/60.0;
+        loc._lat += std::atof(str.substr(offset+4,2).c_str())/3600.0;
 
-        if( str[0] != 'N')
-            loc._lat = -loc._lat;
+        loc._lng = std::atof(str.substr(offset+8, bNarrow?2:3).c_str());
+        loc._lng += std::atof(str.substr(offset+(bNarrow?10:11),2).c_str())/60.0;
+        loc._lng += std::atof(str.substr(offset+(bNarrow?12:13),2).c_str())/3600.0;
 
-        if( str[8] == 'W')
-            loc._lng = -loc._lng;
+        if( offset == 1)
+        {
+            if( str[0] != 'N')
+                loc._lat = -loc._lat;
 
-        return loc;
-    }
+            if( str[8] == 'W')
+                loc._lng = -loc._lng;
+        }
+        else
+        {
+            if( str[6] != 'N')
+                loc._lat = -loc._lat;
 
-    static GPSLocation FromDegMinSecSymbAtEnd(const std::string& str)
-    {
-        //N520555 W0005756 - 16 chars long4
-        if( str.length() < 15)
-            return GPSLocation();
-
-        bool bNarrow = str.length() == 15;
-
-        GPSLocation loc;
-        loc._lat = std::atof(str.substr(0, 2).c_str());
-        loc._lat += std::atof(str.substr(2, 2).c_str())/60.0;
-        loc._lat += std::atof(str.substr(4,2).c_str())/3600.0;
-
-        loc._lng = std::atof(str.substr(8, bNarrow?2:3).c_str());
-        loc._lng += std::atof(str.substr(bNarrow?10:11,2).c_str())/60.0;
-        loc._lng += std::atof(str.substr(bNarrow?12:13,2).c_str())/3600.0;
-
-        if( str[6] != 'N')
-            loc._lat = -loc._lat;
-
-        if( str[bNarrow?14:15] == 'W')
-            loc._lng = -loc._lng;
+            if( str[bNarrow?14:15] == 'W')
+                loc._lng = -loc._lng;
+        }
 
         return loc;
     }
