@@ -42,24 +42,27 @@ isEmpty(TARGET_EXT) {
    # TARGET_CUSTOM_EXT = $${TARGET_EXT}
 #}
 
-contains(CONFIG, "qt"){
 
-    win32 {
-        DEPLOY_COMMAND = windeployqt
-    }
-    macx {
-        DEPLOY_COMMAND = macdeployqt
-    }
+CONFIG(release, debug|release) {
+    contains(CONFIG, "qt"){
 
-    win32 {
+        win32 {
+            DEPLOY_COMMAND = windeployqt
+        }
+        macx {
+            DEPLOY_COMMAND = macdeployqt
+        }
 
-    DEPLOY_TARGET =  $$shell_quote($$shell_path($${DESTDIR}/$${TARGET}$${TARGET_CUSTOM_EXT}))
+        win32 {
 
-    #message(  $${DEPLOY_COMMAND} $${DEPLOY_TARGET} )
+        DEPLOY_TARGET =  $$shell_quote($$shell_path($${DESTDIR}/$${TARGET}$${TARGET_CUSTOM_EXT}))
 
-    #  # Uncomment the following line to help debug the deploy command when running qmake
-    #  warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
+        #message(  $${DEPLOY_COMMAND} $${DEPLOY_TARGET} )
 
-        QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
+        #  # Uncomment the following line to help debug the deploy command when running qmake
+        #  warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
+
+            QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
+        }
     }
 }
