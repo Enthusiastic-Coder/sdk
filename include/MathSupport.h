@@ -200,7 +200,7 @@ public:
     static T normAngWithMinus(T angle)
     {
         T x= fmod(angle, 360);
-        if( x < -179)
+        if( x < -180)
             x += 360;
         return x;
     }
