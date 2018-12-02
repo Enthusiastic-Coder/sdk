@@ -14,7 +14,7 @@ static void makePathForDestination(const QString& filePath)
 
 static void ExtractAsset(const QString filePath, const QString& folder=androidAssetFolder, bool bOverwrite=true)
 {    
-    QString fullFilePath= QString("%1:/%2").arg(folder).arg(filePath);
+    QString fullFilePath= QString("%1%2").arg(folder).arg(filePath);
 
     if(bOverwrite)
         QFile::remove(filePath);
