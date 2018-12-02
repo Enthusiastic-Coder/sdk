@@ -3,15 +3,24 @@
 #include <QStringList>
 #include <QDebug>
 
-#define rootFolder "assets:/"
+#define androidAssetFolder "assets:/"
 
-static void ExtractAsset(const QString filePath, bool bOverwrite=true)
+static void makePathForDestination(const QString& filePath)
 {
-    QString fullFilePath= QString("assets:/%0").arg(filePath);
-    if(bOverwrite)  QFile::remove(filePath);
     QFileInfo fi(filePath);
     QDir dir(QDir::currentPath());
     dir.mkpath(fi.absolutePath());
+}
+
+static void ExtractAsset(const QString filePath, const QString& folder=androidAssetFolder, bool bOverwrite=true)
+{    
+    QString fullFilePath= QString("%1:/%2").arg(folder).arg(filePath);
+
+    if(bOverwrite)
+        QFile::remove(filePath);
+
+    makePathForDestination(filePath);
+
     QFile::copy(fullFilePath, filePath);
 }
 
@@ -19,23 +28,28 @@ static void ExtractAsset(const QString filePath, bool bOverwrite=true)
 class AssetTempExtractor
 {
 public:
-    AssetTempExtractor( const QStringList& fileList)
-        :_fileList(fileList)
+    AssetTempExtractor( const QStringList& fileList, const QString& folder=androidAssetFolder)
+        :_fileList(fileList), _folder(folder)
     {
-#ifdef Q_OS_ANDROID
-        for(const QString& fileName:_fileList)
-            ExtractAsset(fileName);
+#ifdef Q_OS_WIN
+    if( folder == androidAssetFolder )
+        return;
 #endif
+        for(const QString& fileName:_fileList)
+            ExtractAsset(fileName, androidAssetFolder);
     }
 
-#ifdef Q_OS_ANDROID
     ~AssetTempExtractor()
     {
+#ifdef Q_OS_WIN
+    if( _folder == androidAssetFolder )
+        return;
+#endif
         for(const QString& fileName:_fileList)
             QFile::remove(fileName);
     }
-#endif
 
 private:
     const QStringList& _fileList;
+    QString _folder;
 };
