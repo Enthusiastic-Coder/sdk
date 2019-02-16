@@ -39,17 +39,33 @@ public:
             ExtractAsset(fileName, androidAssetFolder);
     }
 
+    static void RemoveAll(const QStringList& fileList)
+    {
+#ifndef Q_OS_WIN
+        for(const QString& fileName:fileList)
+            QFile::remove(fileName);
+#endif
+    }
+
     ~AssetTempExtractor()
     {
+        if( !_autoRemove)
+            return;
+
 #ifdef Q_OS_WIN
     if( _folder == androidAssetFolder )
         return;
 #endif
-        for(const QString& fileName:_fileList)
-            QFile::remove(fileName);
+        RemoveAll(_fileList);
+    }
+
+    void setAutoRemove(bool autoRemove)
+    {
+        _autoRemove = autoRemove;
     }
 
 private:
     const QStringList& _fileList;
     QString _folder;
+    bool _autoRemove = true;
 };
