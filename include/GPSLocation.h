@@ -11,7 +11,7 @@ class GPSLocation
 public:
     double _lat;
     double _lng;
-    double _height;
+    float _height;
 
     const static Vector3D& E0()
     {
@@ -366,7 +366,7 @@ public:
         return GPSLocation(c.x, c.y, c.z);
     }
 
-    static double calcBearing( const GPSLocation &fromGps, const GPSLocation &toGps )
+    static float calcBearing( const GPSLocation &fromGps, const GPSLocation &toGps )
     {
         double lat1 = fromGps.LatRad();
         double lng1 = fromGps.LngRad();
@@ -376,23 +376,23 @@ public:
 
         double y = sin( dLng ) * cos( lat2 );
         double x = cos( lat1 ) * sin( lat2 ) - sin( lat1 ) * cos( lat2 ) * cos( dLng );
-        double brg = RadiansToDegrees( atan2( y, x ) );
+        float brg = RadiansToDegrees( atan2( y, x ) );
         if (brg < 0.0)
             brg += 360.0;
         return brg;
     }
 
-    double bearingTo( const GPSLocation &gps ) const
+    float bearingTo( const GPSLocation &gps ) const
     {
         return calcBearing( *this, gps);
     }
 
-    double bearingFrom( const GPSLocation &gps ) const
+    float bearingFrom( const GPSLocation &gps ) const
     {
         return calcBearing( gps, *this);
     }
 
-    double distanceTo( const GPSLocation& gpsLocation ) const
+    float distanceTo( const GPSLocation& gpsLocation ) const
     {
         double dLat = DegreesToRadians( gpsLocation._lat - _lat );
         double dLng = DegreesToRadians( gpsLocation._lng - _lng );
