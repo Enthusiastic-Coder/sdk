@@ -31,31 +31,17 @@ public:
         return _bottomRight;
     }
 
-    bool contains(const GPSBoundary &boundary) const
+    bool overlaps(const GPSBoundary &other) const
     {
-        int X = 0;
-        if( boundary._topLeft._lng < this->_topLeft._lng)
-            X--;
-        else if( boundary._bottomRight._lng > this->_bottomRight._lng)
-            X++;
+        if( topLeft()._lng > other.bottomRight()._lng ||
+                bottomRight()._lng < other.topLeft()._lng)
+            return false;
 
-        if( boundary._bottomRight._lng < this->_topLeft._lng)
-            X--;
-        else if( boundary._topLeft._lng > this->_bottomRight._lng)
-            X++;
+        if( topLeft()._lat < other.bottomRight()._lat ||
+                bottomRight()._lat > other.topLeft()._lat)
+            return false;
 
-        int Y = 0;
-        if( boundary._topLeft._lat > this->_topLeft._lat)
-            Y--;
-        else if( boundary._bottomRight._lat < this->_bottomRight._lat)
-            Y++;
-
-        if( boundary._bottomRight._lat > this->_topLeft._lat)
-            Y--;
-        else if( boundary._topLeft._lat < this->_bottomRight._lat)
-            Y++;
-
-        return !(X == -2 || Y == -2 || X ==2 || Y ==2);
+        return true;
     }
 
 private:

@@ -19,11 +19,8 @@ public:
         _boundary = GPSBoundary(topLeft, bottomRight);
         _divisions = divisions;
 
-        GPSLocation topRight(topLeft._lat, bottomRight._lng);
-        _cellWidth = (topRight._lng - topLeft._lng)/divisions;
-
-        GPSLocation bottomLeft(bottomRight._lat, topLeft._lng);
-        _cellHeight = (bottomLeft._lat - topLeft._lat)/divisions;
+        _cellWidth = (bottomRight._lng - topLeft._lng)/divisions;
+        _cellHeight = (bottomRight._lat - topLeft._lat)/divisions;
     }
 
     const std::map<QString,T*>& getTile(const GPSLocation& pt) const
@@ -38,7 +35,11 @@ public:
 
     void add(const QString& key, T* item, const GPSLocation& pos)
     {
-        _tiles[GPSToTileIndex(pos)][key] = std::unique_ptr<T>(item);
+        int index = GPSToTileIndex(pos);
+        if( index < 0 || index >= _divisions*_divisions)
+            return;
+
+        _tiles[index][key] = std::unique_ptr<T>(item);
     }
 
     void setViewBoundary(const GPSLocation& tL, const GPSLocation& bR) const
@@ -48,7 +49,7 @@ public:
 
         for( const auto& item : _tiles )
         {
-            if(b.contains(boundaryFromIndex(item.first)))
+            if(b.overlaps(boundaryFromIndex(item.first)))
                 _viewableTiles.push_back(item.first);
         }
     }
