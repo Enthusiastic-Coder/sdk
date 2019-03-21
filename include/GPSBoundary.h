@@ -21,6 +21,16 @@ public:
 
     }
 
+    const GPSLocation& topLeft() const
+    {
+        return _topLeft;
+    }
+
+    const GPSLocation& bottomRight() const
+    {
+        return _bottomRight;
+    }
+
     bool contains(const GPSBoundary &boundary) const
     {
         int X = 0;

@@ -8,19 +8,21 @@
 
 #include <memory>
 
+#include <GPSBoundary.h>
+
 template<class T>
 class GPSTileContainer
 {
 public:
     void setBounds(const GPSLocation& topLeft, const GPSLocation& bottomRight, int divisions)
     {
-        _topLeft = topLeft;
+        _boundary = GPSBoundary(topLeft, bottomRight);
         _divisions = divisions;
 
-        GPSLocation topRight(_topLeft._lat, bottomRight._lng);
+        GPSLocation topRight(topLeft._lat, bottomRight._lng);
         _cellWidth = (topRight._lng - topLeft._lng)/divisions;
 
-        GPSLocation bottomLeft(bottomRight._lat, _topLeft._lng);
+        GPSLocation bottomLeft(bottomRight._lat, topLeft._lng);
         _cellHeight = (bottomLeft._lat - topLeft._lat)/divisions;
     }
 
@@ -39,11 +41,41 @@ public:
         _tiles[GPSToTileIndex(pos)][key] = std::unique_ptr<T>(item);
     }
 
-protected:
-    int GPSToTileIndex(const GPSLocation& pos)
+    void setViewBoundary(const GPSLocation& tL, const GPSLocation& bR) const
     {
-        float dW = pos._lng - _topLeft._lng;
-        float dH = pos._lat - _topLeft._lat;
+        _viewableTiles.clear();
+        GPSBoundary b(tL, bR);
+
+        for( const auto& item : _tiles )
+        {
+            if(b.contains(boundaryFromIndex(item.first)))
+                _viewableTiles.push_back(item.first);
+        }
+    }
+
+    const std::vector<int>& getViewableTileIds() const
+    {
+        return _viewableTiles;
+    }
+
+    const std::map<QString,std::unique_ptr<T>>& getTile(int idx) const
+    {
+        auto it = _tiles.find(idx);
+
+        if( it == _tiles.end())
+        {
+            static std::map<QString,std::unique_ptr<T>> empty;
+            return empty;
+        }
+
+        return it->second;
+    }
+
+protected:
+    int GPSToTileIndex(const GPSLocation& pos) const
+    {
+        float dW = pos._lng - _boundary.topLeft()._lng;
+        float dH = pos._lat - _boundary.topLeft()._lat;
 
         int idxH = dH/ _cellHeight;
         int idxW = dW / _cellWidth;
@@ -51,13 +83,33 @@ protected:
         return idxH * _divisions + idxW;
     }
 
+    GPSBoundary boundaryFromIndex(int i) const
+    {
+        int x = i % _divisions;
+        int y = i/ _divisions;
+
+        int x2 = (i+1) % _divisions;
+        int y2 = (i+ _divisions +1) / _divisions;
+
+        GPSLocation tL;
+        tL._lng = _boundary.topLeft()._lng + _cellWidth * x;
+        tL._lat = _boundary.topLeft()._lat + _cellHeight * y;
+
+        GPSLocation bR;
+        bR._lng = _boundary.topLeft()._lng + _cellWidth * x2;
+        bR._lat = _boundary.topLeft()._lat + _cellHeight * y2;
+
+        return {tL, bR};
+    }
+
 private:
-    GPSLocation _topLeft;
-    float _cellWidth;
-    float _cellHeight;
+    GPSBoundary _boundary;
+    double _cellWidth;
+    double _cellHeight;
     int _divisions;
 
     std::map<int,std::map<QString,std::unique_ptr<T>>> _tiles;
+    mutable std::vector<int> _viewableTiles;
 };
 
 #endif // GPSTILECONTAINER_H
