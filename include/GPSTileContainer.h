@@ -75,13 +75,19 @@ public:
 protected:
     int GPSToTileIndex(const GPSLocation& pos) const
     {
-        float dW = pos._lng - _boundary.topLeft()._lng;
-        float dH = pos._lat - _boundary.topLeft()._lat;
+        double dW = pos._lng - _boundary.topLeft()._lng;
+        double dH = pos._lat - _boundary.topLeft()._lat;
 
-        int idxH = dH/ _cellHeight;
-        int idxW = dW / _cellWidth;
+        int cellX = std::floor(dW / _cellWidth);
+        int cellY = std::floor(dH/ _cellHeight);
 
-        return idxH * _divisions + idxW;
+        if( cellX <0 || cellX >= _divisions)
+            return -1;
+
+        if( cellY < 0 || cellY >= _divisions)
+            return -1;
+
+        return cellY * _divisions + cellX;
     }
 
     GPSBoundary boundaryFromIndex(int i) const
