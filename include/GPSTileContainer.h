@@ -49,7 +49,7 @@ public:
 
         for( const auto& item : _tiles )
         {
-            if(b.overlaps(boundaryFromIndex(item.first)))
+            if(b.intersects(boundaryFromIndex(item.first)))
                 _viewableTiles.push_back(item.first);
         }
     }

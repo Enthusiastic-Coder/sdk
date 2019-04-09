@@ -31,7 +31,7 @@ public:
         return _bottomRight;
     }
 
-    bool overlaps(const GPSBoundary &other) const
+    bool intersects(const GPSBoundary &other) const
     {
         if( topLeft()._lng > other.bottomRight()._lng ||
                 bottomRight()._lng < other.topLeft()._lng)
