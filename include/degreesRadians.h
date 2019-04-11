@@ -22,14 +22,10 @@ const float _360DEGREES = 360.0f * ONEDEGREE;
 // inline float DegreesToRadians(float deg)
 //
 // converts degrees to radians
-inline float DegreesToRadians(float deg)
+template<class T>
+inline T DegreesToRadians(T deg)
 {
     return deg * (FLOAT_PI / 180.0f);
-}
-
-inline double DegreesToRadians(double deg)
-{
-    return deg * (M_PI / 180.0);
 }
 
 inline float D2R(float deg)
@@ -44,14 +40,10 @@ inline double D2R(double deg)
 
 //
 // converts radians to degrees
-inline float RadiansToDegrees(float rad)
+template<class T>
+inline T RadiansToDegrees(T rad)
 {
     return rad * (180.0f / FLOAT_PI);
-}
-
-inline double RadiansToDegrees(double rad)
-{
-    return rad * (180.0 / M_PI);
 }
 
 inline float R2D(float rad)
