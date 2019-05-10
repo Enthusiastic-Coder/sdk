@@ -23,12 +23,12 @@ public:
         _cellHeight = (bottomRight._lat - topLeft._lat)/divisions;
     }
 
-    const std::map<QString,T>& getTile(const GPSLocation& pt) const
+    const std::vector<T>& getTile(const GPSLocation& pt) const
     {
         return _tiles[GPSToTileIndex(pt)];
     }
 
-    const std::map<int,std::map<QString,T>>& getTiles() const
+    const std::map<int,std::vector<T>>& getTiles() const
     {
         return _tiles;
     }
@@ -39,7 +39,7 @@ public:
         if( index < 0 || index >= _divisions*_divisions)
             return;
 
-        _tiles[index] = item;
+        _tiles[index].push_back(item);
     }
 
     void setViewBoundary(const GPSLocation& tL, const GPSLocation& bR) const
@@ -59,13 +59,13 @@ public:
         return _viewableTiles;
     }
 
-    const T& getTile(int idx) const
+    const std::vector<T>& getTile(int idx) const
     {
         auto it = _tiles.find(idx);
 
         if( it == _tiles.end())
         {
-            static std::map<QString,T> empty;
+            static std::vector<T> empty;
             return empty;
         }
 
@@ -115,7 +115,7 @@ private:
     double _cellHeight;
     int _divisions;
 
-    std::map<int,T> _tiles;
+    std::map<int,std::vector<T>> _tiles;
     mutable std::vector<int> _viewableTiles;
 };
 
