@@ -33,13 +33,13 @@ public:
         return _tiles;
     }
 
-    void add(const QString& key, T& item, const GPSLocation& pos)
+    void add(const T& item, const GPSLocation& pos)
     {
         int index = GPSToTileIndex(pos);
         if( index < 0 || index >= _divisions*_divisions)
             return;
 
-        _tiles[index][key] = item;
+        _tiles[index] = item;
     }
 
     void setViewBoundary(const GPSLocation& tL, const GPSLocation& bR) const
@@ -59,7 +59,7 @@ public:
         return _viewableTiles;
     }
 
-    const std::map<QString,T>& getTile(int idx) const
+    const T& getTile(int idx) const
     {
         auto it = _tiles.find(idx);
 
@@ -115,7 +115,7 @@ private:
     double _cellHeight;
     int _divisions;
 
-    std::map<int,std::map<QString,T>> _tiles;
+    std::map<int,T> _tiles;
     mutable std::vector<int> _viewableTiles;
 };
 
