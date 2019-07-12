@@ -62,7 +62,7 @@ CONFIG(release, debug|release) {
         #  # Uncomment the following line to help debug the deploy command when running qmake
         #  warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
 
-            QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
+            QMAKE_POST_LINK = $${DEPLOY_COMMAND} --qmldir /Qt/5.12.4/msvc2017_64/qml $${DEPLOY_TARGET}
         }
     }
 }
