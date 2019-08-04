@@ -31,20 +31,17 @@ public:
     AssetTempExtractor( const QStringList& fileList, const QString& folder=androidAssetFolder)
         :_fileList(fileList), _folder(folder)
     {
-#ifdef Q_OS_WIN
-    if( folder == androidAssetFolder )
-        return;
-#endif
+        if( isNotExtractable(folder))
+            return;
+
         for(const QString& fileName:_fileList)
             ExtractAsset(fileName, folder);
     }
 
-    static void RemoveAll(const QStringList& fileList)
+    static void RemoveAll(const QStringList& fileList, const QString& folder=androidAssetFolder)
     {
-#ifdef Q_OS_WIN
-    if( _folder == androidAssetFolder )
-        return;
-#endif
+        if( isNotExtractable(folder))
+            return;
 
         for(const QString& fileName:fileList)
         {
@@ -60,12 +57,22 @@ public:
         if( !_autoRemove)
             return;
 
-        RemoveAll(_fileList);
+        RemoveAll(_fileList, _folder);
     }
 
     void setAutoRemove(bool autoRemove)
     {
         _autoRemove = autoRemove;
+    }
+
+    static bool isNotExtractable(const QString& folder)
+    {
+    #ifdef Q_OS_WIN
+        if( folder == androidAssetFolder )
+            return true;
+    #endif
+
+        return false;
     }
 
 private:
