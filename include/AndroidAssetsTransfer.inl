@@ -36,15 +36,23 @@ public:
         return;
 #endif
         for(const QString& fileName:_fileList)
-            ExtractAsset(fileName, androidAssetFolder);
+            ExtractAsset(fileName, folder);
     }
 
     static void RemoveAll(const QStringList& fileList)
     {
-#ifndef Q_OS_WIN
-        for(const QString& fileName:fileList)
-            QFile::remove(fileName);
+#ifdef Q_OS_WIN
+    if( _folder == androidAssetFolder )
+        return;
 #endif
+
+        for(const QString& fileName:fileList)
+        {
+#ifdef Q_OS_WIN
+        QFile(fileName).setPermissions(QFile::Permission::WriteOwner);
+#endif
+            QFile::remove(fileName);
+        }
     }
 
     ~AssetTempExtractor()
@@ -52,10 +60,6 @@ public:
         if( !_autoRemove)
             return;
 
-#ifdef Q_OS_WIN
-    if( _folder == androidAssetFolder )
-        return;
-#endif
         RemoveAll(_fileList);
     }
 
