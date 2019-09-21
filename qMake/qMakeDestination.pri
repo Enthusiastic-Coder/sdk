@@ -47,7 +47,7 @@ CONFIG(release, debug|release) {
     contains(CONFIG, "qt"){
 
         win32 {
-            DEPLOY_COMMAND = c:/Qt/5.12.4/msvc2017_64/bin/windeployqt
+            DEPLOY_COMMAND = c:/Qt/5.13.1/msvc2017_64/bin/windeployqt
         }
         macx {
             DEPLOY_COMMAND = macdeployqt
@@ -62,7 +62,7 @@ CONFIG(release, debug|release) {
         #  # Uncomment the following line to help debug the deploy command when running qmake
         #  warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
 
-            QMAKE_POST_LINK = $${DEPLOY_COMMAND} --qmldir c:/Qt/5.12.4/msvc2017_64/qml $${DEPLOY_TARGET}
+            QMAKE_POST_LINK = $${DEPLOY_COMMAND} --qmldir c:/Qt/5.13.1/msvc2017_64/qml $${DEPLOY_TARGET}
         }
     }
 }
