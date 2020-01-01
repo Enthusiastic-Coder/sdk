@@ -16,6 +16,7 @@ android{
     DEFINES += IS_QT_ANDROID
 }
 
+win32{
 DESTDIR = $$OUT_PWD/$$CONFIGURATION
 OBJECTS_DIR = $$OUT_PWD/.obj
 MOC_DIR = $$OUT_PWD/.moc
@@ -23,7 +24,6 @@ RCC_DIR = $$OUT_PWD/.rcc
 UI_DIR = $$OUT_PWD/.ui
 
 
-win32{
     DEPLOY_DIR = $$DESTDIR
 }
 
@@ -47,7 +47,7 @@ CONFIG(release, debug|release) {
     contains(CONFIG, "qt"){
 
         win32 {
-            DEPLOY_COMMAND = c:/Qt/5.13.1/msvc2017_64/bin/windeployqt
+            DEPLOY_COMMAND = c:/Qt/5.14.0/msvc2017_64/bin/windeployqt
         }
         macx {
             DEPLOY_COMMAND = macdeployqt
