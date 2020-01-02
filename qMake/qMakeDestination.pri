@@ -47,7 +47,7 @@ CONFIG(release, debug|release) {
     contains(CONFIG, "qt"){
 
         win32 {
-            DEPLOY_COMMAND = c:/Qt/5.14.0/msvc2017_64/bin/windeployqt
+            DEPLOY_COMMAND = c:/Qt/5.13.1/msvc2017_64/bin/windeployqt
         }
         macx {
             DEPLOY_COMMAND = macdeployqt
