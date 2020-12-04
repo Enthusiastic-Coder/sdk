@@ -41,47 +41,6 @@ public:
         return loc;
     }
 
-    static GPSLocation FromDMS(const std::string& str)
-    {
-        if( str.length() < 15)
-            return GPSLocation();
-
-        bool bNarrow = str.length() == 15;
-        int offset = 0;
-
-        if( str[0] == 'N' || str[1] == 'S')
-            offset = 1;
-
-        GPSLocation loc;
-
-        loc._lat = std::atof(str.substr(offset, 2).c_str());
-        loc._lat += std::atof(str.substr(offset+2, 2).c_str())/60.0;
-        loc._lat += std::atof(str.substr(offset+4,2).c_str())/3600.0;
-
-        loc._lng = std::atof(str.substr(offset+8, bNarrow?2:3).c_str());
-        loc._lng += std::atof(str.substr(offset+(bNarrow?10:11),2).c_str())/60.0;
-        loc._lng += std::atof(str.substr(offset+(bNarrow?12:13),2).c_str())/3600.0;
-
-        if( offset == 1)
-        {
-            if( str[0] != 'N')
-                loc._lat = -loc._lat;
-
-            if( str[8] == 'W')
-                loc._lng = -loc._lng;
-        }
-        else
-        {
-            if( str[6] != 'N')
-                loc._lat = -loc._lat;
-
-            if( str[bNarrow?14:15] == 'W')
-                loc._lng = -loc._lng;
-        }
-
-        return loc;
-    }
-
     GPSLocation(double fLat, double fLng, double fHeight = 0.0 )
         : _lat(fLat), _lng(fLng), _height(fHeight)
     {
