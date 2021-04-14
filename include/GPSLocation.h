@@ -317,6 +317,14 @@ public:
         return a * b;
     }
 
+    GPSLocation& operator=(const GPSLocation& rhs)
+    {
+        _lat = rhs._lat;
+        _lng = rhs._lng;
+        _height = rhs._height;
+        return *this;
+    }
+
     GPSLocation operator^(const GPSLocation &rhs ) const
     {
         Vector3D a(_lng, _height*0, _lat );
