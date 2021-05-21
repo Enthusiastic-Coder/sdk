@@ -403,11 +403,6 @@ public:
         return *this;
     }
 
-    void operator=(const Matrix4x4<T>& m)
-    {
-        memcpy( this, &m, sizeof(Matrix4x4) );
-    }
-
     bool operator==(const Matrix4x4<double>& m) const
     {
         return fabs(this->m11 - m.m11) < std::numeric_limits<double>::epsilon()
