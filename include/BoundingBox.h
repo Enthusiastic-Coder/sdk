@@ -240,6 +240,16 @@ public:
         return pts[idx];
     }
 
+    float getMinX() const
+    {
+        return _minX;
+    }
+
+    float getMaxX() const
+    {
+        return _maxX;
+    }
+
     float getMinY() const
     {
         return _minY;
@@ -249,6 +259,17 @@ public:
     {
         return _maxY;
     }
+
+    float getMinZ() const
+    {
+        return _minZ;
+    }
+
+    float getMaxZ() const
+    {
+        return _maxZ;
+    }
+
 
 private:
     BoundingPoint pts[_dims];
