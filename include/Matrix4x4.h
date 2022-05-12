@@ -4,6 +4,7 @@
 #include "GPSLocation.h"
 #include "vector3.h"
 #include <limits>
+#include "Matrix3x3.h"
 
 template<class T=MathSupportType>
 class Matrix4x4
@@ -83,6 +84,29 @@ public:
         Reset();
     }
 
+    Matrix4x4<T>(T* values)
+    {
+        m11 = values[0];
+        m12 = values[1];
+        m13 = values[2];
+        m14 = values[3];
+
+        m21 = values[4];
+        m22 = values[5];
+        m23 = values[6];
+        m24 = values[7];
+
+        m31 = values[8];
+        m32 = values[9];
+        m33 = values[10];
+        m34 = values[11];
+
+        m41 = values[12];
+        m42 = values[13];
+        m43 = values[14];
+        m44 = values[15];
+    }
+
     void Reset()
     {
         m11 = 0;
@@ -119,7 +143,7 @@ public:
                 + m13 * (m21*(m32*m44 - m42*m34) - m22*(m31*m44 - m41*m34) + m24 *(m31*m42 - m41*m32))
                 - m14 * (m21*(m32*m43 - m42*m33) - m22*(m31*m43 - m41*m33) + m23 *(m31*m42 - m41*m32));
 
-        if( fabs(det) < std::numeric_limits<float>::epsilon() )
+        if( fabs(det) < std::numeric_limits<T>::epsilon() )
             return m;
 
         m.m11=m22*m33*m44+m23*m34*m42+m24*m32*m43-m22*m34*m43-m23*m32*m44-m24*m33*m42;
