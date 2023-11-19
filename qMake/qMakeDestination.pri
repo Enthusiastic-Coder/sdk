@@ -13,7 +13,6 @@ win32{
 
 android{
     TARGET_ARCH_ABI = $${ANDROID_TARGET_ARCH}
-    DEFINES += IS_QT_ANDROID
 }
 
 win32{
@@ -34,13 +33,8 @@ android{
 isEmpty(TARGET_EXT) {
     win32 {
         TARGET_CUSTOM_EXT = .exe
-    }
-    macx {
-        TARGET_CUSTOM_EXT = .app
-    }
-} #else {
-   # TARGET_CUSTOM_EXT = $${TARGET_EXT}
-#}
+    }   
+}
 
 
 CONFIG(release, debug|release) {
@@ -48,9 +42,6 @@ CONFIG(release, debug|release) {
 
         win32 {
             DEPLOY_COMMAND = $(QTDIR)/bin/windeployqt
-        }
-        macx {
-            DEPLOY_COMMAND = macdeployqt
         }
 
         win32 {
