@@ -4,7 +4,6 @@
 #include "Quarternion.h"
 #include "vector3.h"
 #include "degreesRadians.h"
-#include <algorithm>
 
 class GPSLocation
 {
