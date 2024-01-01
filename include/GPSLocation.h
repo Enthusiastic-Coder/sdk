@@ -40,7 +40,7 @@ public:
         return loc;
     }
 
-    GPSLocation(double fLat, double fLng, double fHeight = 0.0 )
+    GPSLocation(double fLat, double fLng, float fHeight = 0.0f )
         : _lat(fLat), _lng(fLng), _height(fHeight)
     {
     }
@@ -60,7 +60,7 @@ public:
     {
     }
 
-    GPSLocation( const GPSLocation &p, double fHeight)
+    GPSLocation( const GPSLocation &p, float fHeight)
         : _lat(p._lat), _lng(p._lng), _height(fHeight)
     {
 
