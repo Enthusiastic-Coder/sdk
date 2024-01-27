@@ -199,12 +199,12 @@ public:
 
     void ExtractPlane(Frustum &frustum, int face) const
     {
-        PlaneF& plane = frustum.plane[face];
+        Plane<T>& plane = frustum.plane[face];
         int row = frustumScale[face];
         int scale = (row < 0) ? -1 : 1;
         row = (std::abs(row) - 1) * 4;
 
-        Matrix4x4<float> mat( toFloat() );
+        const Matrix4x4<T>& mat = *this;
 
         plane.N.x = mat[12] + scale * mat[row];
         plane.N.y = mat[13] + scale * mat[row + 1];
@@ -632,40 +632,64 @@ public:
     }
 };
 
+#include <type_traits>
 
 
 template<class T>
 inline void Matrix4x4<T>::LookAt(const GPSLocation& eye, const GPSLocation& center, Vector3<T> up)
 {
-    Vector3<T> forward = center.position() - eye.position();
+    Vector3D forward = center.position() - eye.position();
     forward = QVRotate(~eye.makeQ(), forward);
-    LookAtHelper(forward, up);
+    if constexpr (std::is_same<T, double>::value)
+    {
+        LookAtHelper(forward, up);
+    }
+    else if constexpr (std::is_same<T, float>::value)
+    {
+        Vector3F forwardF = forward.toFloat();
+        LookAtHelper(forwardF, up);
+    }
 }
 
 template<class T>
 inline void Matrix4x4<T>::ApplyModelMatrix(const GPSLocation& loc, bool ignoreHeight)
 {
-    Matrix4x4<T> m;
+    Matrix4x4D m;
     m.LoadIdentity();
     m *= ToLocalGPS0Matrix4x4::get();
     m.RotateY(loc._lng);
     m.RotateX(-loc._lat);
     m *= ToNonLocalGPS0Matrix4x4::get();
     if( !ignoreHeight) m.Translate(0, loc._height, 0);
-    operator *= (m);
+
+    if constexpr (std::is_same<T, double>::value)
+    {
+        operator *= (m);
+    }
+    else if constexpr (std::is_same<T, float>::value)
+    {
+        operator *= (m.toFloat());
+    }
 }
 
 template<class T>
 inline void Matrix4x4<T>::ApplyViewMatrix(const GPSLocation& loc, bool ignoreHeight)
 {
-    Matrix4x4<T> m;
+    Matrix4x4D m;
     m.LoadIdentity();
     if( !ignoreHeight) m.Translate(0, -loc._height, 0);
     m *= ToLocalGPS0Matrix4x4::get();
     m.RotateX(loc._lat);
     m.RotateY(-loc._lng);
     m *= ToNonLocalGPS0Matrix4x4::get();
-    operator *= (m);
+    if constexpr (std::is_same<T, double>::value)
+    {
+        operator *= (m);
+    }
+    else if constexpr (std::is_same<T, float>::value)
+    {
+        operator *= (m.toFloat());
+    }
 }
 
 
