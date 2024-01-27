@@ -199,7 +199,7 @@ public:
 
     void ExtractPlane(Frustum &frustum, int face) const
     {
-        Plane<T>& plane = frustum.plane[face];
+        PlaneF& plane = frustum.plane[face];
         int row = frustumScale[face];
         int scale = (row < 0) ? -1 : 1;
         row = (std::abs(row) - 1) * 4;
