@@ -51,25 +51,25 @@ public:
     {
         Matrix4x4<float> m;
 
-        m.m11 = (float)m11;
-        m.m12 = (float)m12;
-        m.m13 = (float)m13;
-        m.m14 = (float)m14;
+        m.m11 = static_cast<float>(m11);
+        m.m12 = static_cast<float>(m12);
+        m.m13 = static_cast<float>(m13);
+        m.m14 = static_cast<float>(m14);
 
-        m.m21 = (float)m21;
-        m.m22 = (float)m22;
-        m.m23 = (float)m23;
-        m.m24 = (float)m24;
+        m.m21 = static_cast<float>(m21);
+        m.m22 = static_cast<float>(m22);
+        m.m23 = static_cast<float>(m23);
+        m.m24 = static_cast<float>(m24);
 
-        m.m31 = (float)m31;
-        m.m32 = (float)m32;
-        m.m33 = (float)m33;
-        m.m34 = (float)m34;
+        m.m31 = static_cast<float>(m31);
+        m.m32 = static_cast<float>(m32);
+        m.m33 = static_cast<float>(m33);
+        m.m34 = static_cast<float>(m34);
 
-        m.m41 = (float)m41;
-        m.m42 = (float)m42;
-        m.m43 = (float)m43;
-        m.m44 = (float)m44;
+        m.m41 = static_cast<float>(m41);
+        m.m42 = static_cast<float>(m42);
+        m.m43 = static_cast<float>(m43);
+        m.m44 = static_cast<float>(m44);
 
         return m;
     }
