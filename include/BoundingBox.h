@@ -80,15 +80,7 @@ public:
 class BoundingBox
 {
 public:
-    BoundingBox()
-    {
-        _minX = 0.0;
-        _minY = 0.0;
-        _minZ = 0.0;
-        _maxX = 0.0;
-        _maxY = 0.0;
-        _maxZ = 0.0;
-    }
+    BoundingBox() = default;
 
     BoundingBox( const Vector3F& minpt, const Vector3F& maxpt )
     {
@@ -273,10 +265,10 @@ public:
 
 private:
     BoundingPoint pts[_dims];
-    float _minX;
-    float _minY;
-    float _minZ;
-    float _maxX;
-    float _maxY;
-    float _maxZ;
+    float _minX = 0.0f;
+    float _minY = 0.0f;
+    float _minZ = 0.0f;
+    float _maxX = 0.0f;
+    float _maxY = 0.0f;
+    float _maxZ = 0.0f;
 };
