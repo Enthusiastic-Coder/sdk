@@ -1,5 +1,4 @@
 #pragma once
-#include <map>
 #include "Frustum.h"
 #include "GPSLocation.h"
 #include "vector3.h"
