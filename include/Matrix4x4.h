@@ -9,7 +9,6 @@ template<class T=MathSupportType>
 class Matrix4x4
 {
 public:
-    int frustumScale[6];
     T m11 = T{0};
     T m12 = T{0};
     T m13 = T{0};
@@ -27,6 +26,7 @@ public:
     T m43 = T{0};
     T m44 = T{0};
 
+    static const int frustumScale[6];
 
     Matrix3x3<T> to3x3() const
     {
@@ -126,16 +126,6 @@ public:
         m44 = values[15];
     }
 
-    void Reset()
-    {
-        frustumScale[Frustum::Left] = 1;
-        frustumScale[Frustum::Right] = -1;
-        frustumScale[Frustum::Top] = 2;
-        frustumScale[Frustum::Bottom] = -2;
-        frustumScale[Frustum::Near] = 3;
-        frustumScale[Frustum::Far] = -3;
-    }
-
     Matrix4x4<T> Inverse() const
     {
         Matrix4x4<T> m;
@@ -218,21 +208,22 @@ public:
 
     void LoadIdentity()
     {
-        m11 = 1;
         m12 = 0;
         m13 = 0;
         m14 = 0;
         m21 = 0;
-        m22 = 1;
         m23 = 0;
         m24 = 0;
         m31 = 0;
         m32 = 0;
-        m33 = 1;
         m34 = 0;
         m41 = 0;
         m42 = 0;
         m43 = 0;
+
+        m11 = 1;
+        m22 = 1;
+        m33 = 1;
         m44 = 1;
     }
 
@@ -601,6 +592,10 @@ protected:
     }
 
 };
+
+template <typename T>
+const int Matrix4x4<T>::frustumScale[6] = {1, -1, -2, 2, 3, -3};
+
 
 #include "GPSLocation.h"
 
