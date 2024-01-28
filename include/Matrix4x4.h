@@ -158,7 +158,7 @@ public:
         m.m34=m11*m23*m42+m12*m21*m43+m13*m22*m41-m11*m22*m43-m12*m23*m41-m13*m21*m42;
         m.m44=m11*m22*m33+m12*m23*m31+m13*m21*m32-m11*m23*m32-m12*m21*m33-m13*m22*m31;
 
-        m *= ((T)1.0/det);
+        m *= static_cast<T>(1.0/det);
         return m.Transpose();
     }
 
