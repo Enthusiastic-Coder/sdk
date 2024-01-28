@@ -9,24 +9,24 @@ template<class T=MathSupportType>
 class Matrix4x4
 {
 public:
-    T m11;
-    T m12;
-    T m13;
-    T m14;
-    T m21;
-    T m22;
-    T m23;
-    T m24;
-    T m31;
-    T m32;
-    T m33;
-    T m34;
-    T m41;
-    T m42;
-    T m43;
-    T m44;
-
     int frustumScale[6];
+    T m11 = T{0};
+    T m12 = T{0};
+    T m13 = T{0};
+    T m14 = T{0};
+    T m21 = T{0};
+    T m22 = T{0};
+    T m23 = T{0};
+    T m24 = T{0};
+    T m31 = T{0};
+    T m32 = T{0};
+    T m33 = T{0};
+    T m34 = T{0};
+    T m41 = T{0};
+    T m42 = T{0};
+    T m43 = T{0};
+    T m44 = T{0};
+
 
     Matrix3x3<T> to3x3() const
     {
@@ -78,9 +78,29 @@ public:
         return (&m11)[i];
     }
 
-    Matrix4x4()
+    Matrix4x4() = default;
+
+    Matrix4x4<T>(const Matrix4x4<float>& values)
     {
-        Reset();
+        m11 = values.m11;
+        m12 = values.m12;
+        m13 = values.m13;
+        m14 = values.m14;
+
+        m21 = values.m21;
+        m22 = values.m22;
+        m23 = values.m23;
+        m24 = values.m24;
+
+        m31 = values.m31;
+        m32 = values.m32;
+        m33 = values.m33;
+        m34 = values.m34;
+
+        m41 = values.m41;
+        m42 = values.m42;
+        m43 = values.m43;
+        m44 = values.m44;
     }
 
     Matrix4x4<T>(T* values)
@@ -108,23 +128,6 @@ public:
 
     void Reset()
     {
-        m11 = 0;
-        m12 = 0;
-        m13 = 0;
-        m14 = 0;
-        m21 = 0;
-        m22 = 0;
-        m23 = 0;
-        m24 = 0;
-        m31 = 0;
-        m32 = 0;
-        m33 = 0;
-        m34 = 0;
-        m41 = 0;
-        m42 = 0;
-        m43 = 0;
-        m44 = 0;
-
         frustumScale[Frustum::Left] = 1;
         frustumScale[Frustum::Right] = -1;
         frustumScale[Frustum::Top] = 2;
@@ -215,10 +218,21 @@ public:
 
     void LoadIdentity()
     {
-        Reset();
         m11 = 1;
+        m12 = 0;
+        m13 = 0;
+        m14 = 0;
+        m21 = 0;
         m22 = 1;
+        m23 = 0;
+        m24 = 0;
+        m31 = 0;
+        m32 = 0;
         m33 = 1;
+        m34 = 0;
+        m41 = 0;
+        m42 = 0;
+        m43 = 0;
         m44 = 1;
     }
 
