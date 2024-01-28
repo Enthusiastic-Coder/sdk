@@ -80,27 +80,54 @@ public:
 
     Matrix4x4() = default;
 
-    Matrix4x4<T>(const Matrix4x4<float>& values)
+    Matrix4x4<T>(const Matrix4x4<float>& rhs)
     {
-        m11 = values.m11;
-        m12 = values.m12;
-        m13 = values.m13;
-        m14 = values.m14;
+        m11 = rhs.m11;
+        m12 = rhs.m12;
+        m13 = rhs.m13;
+        m14 = rhs.m14;
 
-        m21 = values.m21;
-        m22 = values.m22;
-        m23 = values.m23;
-        m24 = values.m24;
+        m21 = rhs.m21;
+        m22 = rhs.m22;
+        m23 = rhs.m23;
+        m24 = rhs.m24;
 
-        m31 = values.m31;
-        m32 = values.m32;
-        m33 = values.m33;
-        m34 = values.m34;
+        m31 = rhs.m31;
+        m32 = rhs.m32;
+        m33 = rhs.m33;
+        m34 = rhs.m34;
 
-        m41 = values.m41;
-        m42 = values.m42;
-        m43 = values.m43;
-        m44 = values.m44;
+        m41 = rhs.m41;
+        m42 = rhs.m42;
+        m43 = rhs.m43;
+        m44 = rhs.m44;
+    }
+
+    Matrix4x4<T>& operator=(const Matrix4x4<T>& rhs) {
+        if (this != &rhs)
+        {
+            m11 = rhs.m11;
+            m12 = rhs.m12;
+            m13 = rhs.m13;
+            m14 = rhs.m14;
+
+            m21 = rhs.m21;
+            m22 = rhs.m22;
+            m23 = rhs.m23;
+            m24 = rhs.m24;
+
+            m31 = rhs.m31;
+            m32 = rhs.m32;
+            m33 = rhs.m33;
+            m34 = rhs.m34;
+
+            m41 = rhs.m41;
+            m42 = rhs.m42;
+            m43 = rhs.m43;
+            m44 = rhs.m44;
+        }
+
+        return *this;
     }
 
     Matrix4x4<T>(T* values)
