@@ -81,6 +81,14 @@ public:
 
     Matrix4x4() = default;
 
+    Matrix4x4<T>(T* values)
+    {
+        for(int i=0; i < 16; ++i)
+        {
+            static_cast<T*>(&m11)[i] = values[i];
+        }
+    }
+
     Matrix4x4<T> Inverse() const
     {
         Matrix4x4<T> m;
