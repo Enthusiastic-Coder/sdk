@@ -1,7 +1,7 @@
 #ifndef GPSBOUNDARY_H
 #define GPSBOUNDARY_H
 
-#include <GPSLocation.h>
+#include "GPSLocation.h"
 #include <QPair>
 
 class GPSBoundary

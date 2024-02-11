@@ -2,13 +2,11 @@
 #define GPSTILECONTAINER_H
 
 #include <QString>
-#include <GPSLocation.h>
 #include <vector>
 #include <map>
 
-#include <memory>
-
-#include <GPSBoundary.h>
+#include "GPSBoundary.h"
+#include "GPSLocation.h"
 
 template<class T>
 class GPSTileContainer
