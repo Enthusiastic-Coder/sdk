@@ -8,14 +8,6 @@ CONFIG(debug, debug|release) {
 }
 
 win32{
-    TARGET_ARCH_ABI = Win32
-}
-
-android{
-    TARGET_ARCH_ABI = $${ANDROID_TARGET_ARCH}
-}
-
-win32{
 DESTDIR = $$OUT_PWD/$$CONFIGURATION
 OBJECTS_DIR = $$OUT_PWD/.obj
 MOC_DIR = $$OUT_PWD/.moc
