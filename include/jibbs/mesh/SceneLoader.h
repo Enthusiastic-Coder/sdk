@@ -2,19 +2,20 @@
 #define SCENELOADER_H
 
 #include <jibbs/boundary/BoundingBox.h>
+#include <jibbs/opengl/OpenGLShaderProgram.h>
+#include <jibbs/mesh/SubScene.h>
+
 #include <vector>
 #include <functional>
 
 #include <QString>
 #include <QFuture>
 #include <QFutureWatcher>
-#include <OpenGLShaderProgram.h>
 
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "SubScene.h"
 
 class AssimpMeshManager;
 

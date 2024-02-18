@@ -1,4 +1,5 @@
-#include "permissions.h"
+#include <jibbs/utilities/permissions.h>
+
 #include <QFuture>
 
 #ifdef Q_OS_ANDROID

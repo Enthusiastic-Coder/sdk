@@ -1,5 +1,4 @@
-#include "stdafx.h"
-#include "MeshData.h"
+#include <jibbs/mesh/MeshData.h>
 #include <QOpenGLBuffer>
 
 void meshData::clear(int t)

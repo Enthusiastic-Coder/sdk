@@ -65,3 +65,6 @@ SOURCES += \
     $$PWD/source/utilities/QmlClipboardAdapter.cpp \
     $$PWD/source/utilities/RandomStringGenerator.cpp \
     $$PWD/source/utilities/permissions.cpp
+
+HEADERS += \
+    $$PWD/include/jibbs/mesh/AssimpMeshManager.h

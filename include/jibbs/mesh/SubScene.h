@@ -2,14 +2,15 @@
 #define SUBSCENE_H
 
 #include <jibbs/boundary/BoundingBox.h>
+#include <jibbs/opengl/OpenGLShaderProgram.h>
+#include <jibbs/opengl/OpenGLPipeline.h>
+
 #include <vector>
 #include <functional>
 
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 
-#include <OpenGLShaderProgram.h>
-#include <OpenGLPipeline.h>
 #include <vertexData.h>
 #include "pivotData.h"
 

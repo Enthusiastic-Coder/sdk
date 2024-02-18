@@ -1,13 +1,12 @@
 #define NOMINMAX
 
-#include "stdafx.h"
 #include <jibbs/math/MeshHelper.h>
+#include <jibbs/mesh/meshloader.h>
+#include <jibbs/opengl/QtTextureManager.h>
 
-#include "meshloader.h"
 #include <stdlib.h>
-#include <vector>
 #include <vertexData.h>
-#include "QtTextureManager.h"
+
 #include <QImage>
 #include <QFileInfo>
 #include <QDebug>
@@ -15,7 +14,9 @@
 #include <QOpenGLFunctions>
 #include <QObject>
 #include <QMutexLocker>
+
 #include "AssimpMeshManager.h"
+#include "stdafx.h"
 
 meshLoader::meshLoader(std::shared_ptr<QtTextureManager> t, std::shared_ptr<AssimpMeshManager> meshManager) :
     _texManager(t), _meshManager(meshManager)

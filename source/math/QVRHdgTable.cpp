@@ -1,7 +1,6 @@
 #include <jibbs/math/MathSupport.h>
 #include <jibbs/math/Quarternion.h>
-
-#include "QVRHdgTable.h"
+#include <jibbs/math/QVRHdgTable.h>
 
 const float QVRHdgTable::s_Factor = 100.0f;
 

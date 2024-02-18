@@ -1,17 +1,17 @@
 #ifndef MESHLOADER_H
 #define MESHLOADER_H
 
+#include <jibbs/boundary/BoundingBox.h>
+#include <jibbs/opengl/OpenGLShaderProgram.h>
+#include <jibbs/mesh/SceneLoader.h>
+#include <jibbs/opengl/QtTextureManager.h>
+
 #include <vector>
 #include <QString>
 #include <vector>
-#include <unordered_map>
-#include <jibbs/boundary/BoundingBox.h>
 
-#include <OpenGLShaderProgram.h>
 #include <functional>
-#include "SceneLoader.h"
 #include "stdafx.h"
-#include <QtTextureManager.h>
 
 class QtTextureManager;
 class AssimpMeshManager;

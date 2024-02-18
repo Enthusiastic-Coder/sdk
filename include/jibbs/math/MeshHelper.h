@@ -1,8 +1,10 @@
 #pragma once
 
 #include <jibbs/boundary/BoundingBox.h>
+#include <jibbs/vector/vector3.h>
 #include "MathSupport.h"
 #include <limits>
+#include <vector>
 
 class MeshHelper
 {

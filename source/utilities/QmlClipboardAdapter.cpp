@@ -1,4 +1,4 @@
-#include "QmlClipboardAdapter.h"
+#include <jibbs/utilities/QmlClipboardAdapter.h>
 #include <QGuiApplication>
 
 QmlClipboardAdapter::QmlClipboardAdapter(QObject *parent) : QObject(parent)

@@ -1,4 +1,4 @@
-#include "RandomStringGenerator.h"
+#include <jibbs/utilities/RandomStringGenerator.h>
 
 QString RandomStringGenerator::generate(int length)
 {

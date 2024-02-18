@@ -1,4 +1,4 @@
-#include "MultSphereMeshObjBuilder.h"
+#include <jibbs/mesh/MultSphereMeshObjBuilder.h>
 #include <QOpenGLFunctions>
 #include <sstream>
 

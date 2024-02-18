@@ -1,4 +1,4 @@
-#include "MultipleInstanceObjBuilder.h"
+#include <jibbs/mesh/MultipleInstanceObjBuilder.h>
 
 MultipleInstanceObjBuilder::MultipleInstanceObjBuilder(ObjLoader *objLoader):
     _obj(objLoader)

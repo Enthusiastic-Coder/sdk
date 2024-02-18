@@ -1,4 +1,4 @@
-#include "ObjectLites.h"
+#include <jibbs/mesh/ObjectLites.h>
 
 void ObjectLites::addQuadLite(meshData &md, float x, float y, float z, float r, float g, float b, float radius, float zFactor)
 {

@@ -1,4 +1,4 @@
-#include "ObjLoader.h"
+#include <jibbs/mesh/ObjLoader.h>
 #include <vector>
 #include <sstream>
 

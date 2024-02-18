@@ -1,4 +1,4 @@
-#include "qhdgtable.h"
+#include <jibbs/math/qhdgtable.h>
 #include <jibbs/math/MathSupport.h>
 
 QHdgTable &QHdgTable::get()
