@@ -5,13 +5,13 @@
 #include <jibbs/opengl/OpenGLShaderProgram.h>
 #include <jibbs/opengl/OpenGLPipeline.h>
 
-#include <vector>
-#include <functional>
-
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 
-#include <vertexData.h>
+#include <vector>
+#include <functional>
+
+#include "vertexData.h"
 #include "pivotData.h"
 
 

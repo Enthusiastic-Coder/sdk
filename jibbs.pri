@@ -108,6 +108,8 @@ HEADERS += \
     $$PWD/include/jibbs/mesh/SceneLoader.h \
     $$PWD/include/jibbs/mesh/SubScene.h \
     $$PWD/include/jibbs/mesh/meshloader.h \
+    $$PWD/include/jibbs/mesh/pivotData.h \
+    $$PWD/include/jibbs/mesh/vertexData.h \
     $$PWD/include/jibbs/opengl/OpenGLFontMeshBuilder.h \
     $$PWD/include/jibbs/opengl/OpenGLFontRenderer.h \
     $$PWD/include/jibbs/opengl/OpenGLFontTexture.h \
