@@ -52,3 +52,16 @@ CONFIG(release, debug|release) {
         }
     }
 }
+
+SOURCES += \
+    $$PWD/source/math/QVRHdgTable.cpp \
+    $$PWD/source/math/qhdgtable.cpp \
+    $$PWD/source/mesh/MeshData.cpp \
+    $$PWD/source/mesh/MultSphereMeshObjBuilder.cpp \
+    $$PWD/source/mesh/MultipleInstanceObjBuilder.cpp \
+    $$PWD/source/mesh/ObjLoader.cpp \
+    $$PWD/source/mesh/ObjectLites.cpp \
+    $$PWD/source/mesh/meshloader.cpp \
+    $$PWD/source/utilities/QmlClipboardAdapter.cpp \
+    $$PWD/source/utilities/RandomStringGenerator.cpp \
+    $$PWD/source/utilities/permissions.cpp
