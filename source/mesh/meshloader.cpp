@@ -1,5 +1,3 @@
-#define NOMINMAX
-
 #include <jibbs/math/MeshHelper.h>
 #include <jibbs/mesh/meshloader.h>
 #include <jibbs/opengl/QtTextureManager.h>

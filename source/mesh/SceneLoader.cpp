@@ -1,4 +1,3 @@
-#define NOMINMAX
 #include <jibbs/mesh/SceneLoader.h>
 #include <jibbs/mesh/AssimpMeshManager.h>
 #include <jibbs/math/MeshHelper.h>
