@@ -1,9 +1,6 @@
 #include <jibbs/opengl/OpenGLRenderer.h>
 #include <jibbs/mesh/MeshData.h>
-
-#include "stdafx.h"
-#include "SkyDome.h"
-
+#include <jibbs/opengl/SkyDome.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265359

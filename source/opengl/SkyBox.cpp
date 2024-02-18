@@ -2,10 +2,9 @@
 #include <jibbs/mesh/MeshData.h>
 #include <jibbs/opengl/OpenGLRenderer.h>
 #include <jibbs/opengl/OpenGLShaderProgram.h>
+#include <jibbs/opengl/SkyBox.h>
 
 #include <QDebug>
-
-#include "SkyBox.h"
 
 #include "stdafx.h"
 
