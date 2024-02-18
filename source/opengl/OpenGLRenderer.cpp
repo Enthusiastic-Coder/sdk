@@ -1,6 +1,7 @@
-#include "OpenGLRenderer.h"
-#include "OpenGLPipeline.h"
-#include "OpenGLShaderProgram.h"
+#include <jibbs/opengl/OpenGLRenderer.h>
+#include <jibbs/opengl/OpenGLPipeline.h>
+#include <jibbs/opengl/OpenGLShaderProgram.h>
+
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 

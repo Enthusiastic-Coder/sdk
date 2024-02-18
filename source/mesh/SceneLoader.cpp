@@ -1,12 +1,11 @@
 #define NOMINMAX
-
-#include "stdafx.h"
+#include <jibbs/mesh/SceneLoader.h>
+#include <jibbs/mesh/AssimpMeshManager.h>
 #include <jibbs/math/MeshHelper.h>
 
-#include "SceneLoader.h"
-#include <stdlib.h>
+#include <assimp/cfileio.h>
+
 #include <vertexData.h>
-#include "AssimpMeshManager.h"
 #include <QImage>
 #include <QFileInfo>
 #include <QDebug>
@@ -16,7 +15,8 @@
 #include <QObject>
 #include <QMutexLocker>
 
-#include <assimp/cfileio.h>
+#include <stdlib.h>
+
 
 namespace {
 struct myAiFile : public aiFile

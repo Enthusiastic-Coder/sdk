@@ -1,9 +1,10 @@
-#include "stdafx.h"
-#include "OpenGLShaderProgram.h"
-#include <string>
-#include <fstream>
+#include <jibbs/opengl/OpenGLShaderProgram.h>
+
 #include <QOpenGLFunctions>
 #include <QCoreApplication>
+
+#include "stdafx.h"
+#include <string>
 
 OpenGLShaderProgram::OpenGLShaderProgram() :
 	_programShaderID(0),

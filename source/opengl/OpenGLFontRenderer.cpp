@@ -1,9 +1,10 @@
+#include <jibbs/opengl/OpenGLFontRenderer.h>
+#include <jibbs/opengl/OpenGLFontTexture.h>
+#include <jibbs/opengl/OpenGLPipeline.h>
+#include <jibbs/opengl/OpenGLRenderer.h>
+#include <jibbs/opengl/OpenGLShaderProgram.h>
+
 #include "stdafx.h"
-#include "OpenGLFontRenderer.h"
-#include "OpenGLFontTexture.h"
-#include "OpenGLPipeline.h"
-#include "OpenGLRenderer.h"
-#include "OpenGLShaderProgram.h"
 
 void OpenGLFontRenderer::selectRenderer(Renderer *r)
 {

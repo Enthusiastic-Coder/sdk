@@ -1,4 +1,4 @@
-#include "AssimpMeshManager.h"
+#include <jibbs/mesh/AssimpMeshManager.h>
 #include <QDebug>
 #include <QMutexLocker>
 

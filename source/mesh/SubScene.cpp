@@ -1,4 +1,4 @@
-#include "SubScene.h"
+#include <jibbs/mesh/SubScene.h>
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 

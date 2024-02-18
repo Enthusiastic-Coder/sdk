@@ -1,6 +1,7 @@
+#include <jibbs/opengl/OpenGLFontTexture.h>
+
 #define NOMINMAX
 #include "stdafx.h"
-#include "OpenGLFontTexture.h"
 
 #include <QFontMetrics>
 #include <QPainter>

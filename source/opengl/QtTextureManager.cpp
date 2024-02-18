@@ -1,4 +1,5 @@
-#include "QtTextureManager.h"
+#include <jibbs/opengl/QtTextureManager.h>
+
 #include <QImage>
 #include <QDebug>
 

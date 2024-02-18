@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MeshData.h"
+#include <jibbs/mesh/MeshData.h>
 #include <QString>
 #include <QOpenGLBuffer>
 

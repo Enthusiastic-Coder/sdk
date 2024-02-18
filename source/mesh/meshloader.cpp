@@ -3,6 +3,7 @@
 #include <jibbs/math/MeshHelper.h>
 #include <jibbs/mesh/meshloader.h>
 #include <jibbs/opengl/QtTextureManager.h>
+#include <jibbs/mesh/AssimpMeshManager.h>
 
 #include <stdlib.h>
 #include <vertexData.h>
@@ -15,7 +16,6 @@
 #include <QObject>
 #include <QMutexLocker>
 
-#include "AssimpMeshManager.h"
 #include "stdafx.h"
 
 meshLoader::meshLoader(std::shared_ptr<QtTextureManager> t, std::shared_ptr<AssimpMeshManager> meshManager) :

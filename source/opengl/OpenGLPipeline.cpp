@@ -1,5 +1,5 @@
-#include "OpenGLPipeline.h"
-#include "OpenGLShaderProgram.h"
+#include <jibbs/opengl/OpenGLPipeline.h>
+#include <jibbs/opengl/OpenGLShaderProgram.h>
 
 OpenGLMatrixStack::OpenGLMatrixStack(MatrixType type) :
     _Type(type)
