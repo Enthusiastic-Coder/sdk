@@ -1,10 +1,10 @@
 #include <jibbs/mesh/SceneLoader.h>
 #include <jibbs/mesh/AssimpMeshManager.h>
 #include <jibbs/math/MeshHelper.h>
+#include <jibbs/mesh/vertexData.h>
 
 #include <assimp/cfileio.h>
 
-#include <vertexData.h>
 #include <QImage>
 #include <QFileInfo>
 #include <QDebug>

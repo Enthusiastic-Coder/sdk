@@ -2,9 +2,9 @@
 #include <jibbs/mesh/meshloader.h>
 #include <jibbs/opengl/QtTextureManager.h>
 #include <jibbs/mesh/AssimpMeshManager.h>
+#include <jibbs/mesh/vertexData.h>
 
 #include <stdlib.h>
-#include <vertexData.h>
 
 #include <QImage>
 #include <QFileInfo>

@@ -72,6 +72,7 @@ SOURCES += \
     $$PWD/source/opengl/OpenGLRenderer.cpp \
     $$PWD/source/opengl/OpenGLShaderProgram.cpp \
     $$PWD/source/opengl/QtTextureManager.cpp \
+    $$PWD/source/opengl/SkyDome.cpp \
     $$PWD/source/utilities/QmlClipboardAdapter.cpp \
     $$PWD/source/utilities/RandomStringGenerator.cpp \
     $$PWD/source/utilities/permissions.cpp
@@ -117,6 +118,7 @@ HEADERS += \
     $$PWD/include/jibbs/opengl/OpenGLRenderer.h \
     $$PWD/include/jibbs/opengl/OpenGLShaderProgram.h \
     $$PWD/include/jibbs/opengl/QtTextureManager.h \
+    $$PWD/include/jibbs/opengl/SkyDome.h \
     $$PWD/include/jibbs/serializable/OGLTexture2D.h \
     $$PWD/include/jibbs/serializable/Serializable.h \
     $$PWD/include/jibbs/serializable/SerializableMacros.h \
