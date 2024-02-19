@@ -78,6 +78,7 @@ SOURCES += \
     $$PWD/source/opengl/SkyDome.cpp \
     $$PWD/source/utilities/QmlClipboardAdapter.cpp \
     $$PWD/source/utilities/RandomStringGenerator.cpp \
+    $$PWD/source/utilities/TextureCacheManager.cpp \
     $$PWD/source/utilities/permissions.cpp
 
 HEADERS += \

@@ -7,6 +7,7 @@
 #include <jibbs/opengl/QtTextureManager.h>
 #include <jibbs/opengl/OpenGLShaderProgram.h>
 #include <jibbs/mesh/MeshData.h>
+#include <jibbs/utilities/TextureCacheManager.h>
 
 #include <QNetworkAccessManager>
 #include <QNetworkCookieJar>
@@ -18,7 +19,6 @@
 #include <unordered_map>
 
 #include "color3.h"
-#include "TextureCacheManager.h"
 
 class Flat3DSphere : public QObject
 {
