@@ -131,6 +131,7 @@ HEADERS += \
     $$PWD/include/jibbs/serializable/SerializableStdStream.h \
     $$PWD/include/jibbs/utilities/QmlClipboardAdapter.h \
     $$PWD/include/jibbs/utilities/RandomStringGenerator.h \
+    $$PWD/include/jibbs/utilities/TextureCacheManager.h \
     $$PWD/include/jibbs/utilities/permissions.h \
     $$PWD/include/jibbs/utilities/stdafx.h \
     $$PWD/include/jibbs/vector/vector2.h \
