@@ -4,8 +4,6 @@
 
 #include <QDebug>
 
-#include "RadarView.h"
-
 WorldTileRenderer::WorldTileRenderer(QObject *parent) : QObject(parent)
 {
     _timer = new QTimer(this);
@@ -62,6 +60,22 @@ void WorldTileRenderer::init(std::shared_ptr<QtTextureManager> texManager)
     _indexBuffer.release();
 }
 
+void WorldTileRenderer::setGPSOrigin(GPSLocation location)
+{
+    _getGPSOrigin = location;
+}
+
+void WorldTileRenderer::setGPSToScreenCallBack(std::function<QPointF (GPSLocation)> callBack)
+{
+    _toScreenCallBack = callBack;
+}
+
+void WorldTileRenderer::setDimensions(float width, float height)
+{
+    _width = width;
+    _height = height;
+}
+
 void WorldTileRenderer::releaseAllTextures()
 {
     for(auto&item:_textures)
@@ -76,12 +90,12 @@ void WorldTileRenderer::setEnabled(bool enabled)
     _enabled = enabled;
 }
 
-void WorldTileRenderer::BuildGroundTile(RadarView *rv, int tileWidth, int tileHeight)
+void WorldTileRenderer::BuildGroundTile(int tileWidth, int tileHeight)
 {
 #ifdef Q_OS_WIN
     //qDebug() << "****" << Q_FUNC_INFO << "****";
 #endif
-    const GPSLocation& loc = rv->gpsOrigin();
+    const GPSLocation& loc = _getGPSOrigin;
 
     const QString tilePath = ":/dim600";
 
@@ -108,11 +122,11 @@ void WorldTileRenderer::BuildGroundTile(RadarView *rv, int tileWidth, int tileHe
             bR.setX( tL.x()+ tileSize.width());
             bR.setY( tL.y() + tileSize.height());
 #else
-            QPointF tL = rv->toScreen(GPSLocation(y+1+lat,x+lng));
-            QPointF bR = rv->toScreen(GPSLocation(y+lat,x+1+lng));
+            QPointF tL = _toScreenCallBack(GPSLocation(y+1+lat,x+lng));
+            QPointF bR = _toScreenCallBack(GPSLocation(y+lat,x+1+lng));
 #endif
 
-            if( !QRectF(tL,bR).intersects(QRectF(0,0, rv->width(), rv->height())))
+            if( !QRectF(tL,bR).intersects(QRectF(0,0, _width, _height)))
                 continue;
 
             const QString filename = QString("%1/%2%3/%2%3%4%5.png")
@@ -163,7 +177,7 @@ void WorldTileRenderer::BuildGroundTile(RadarView *rv, int tileWidth, int tileHe
     }
 }
 
-void WorldTileRenderer::render(RadarView *rv, float compassValue)
+void WorldTileRenderer::render(float compassValue)
 {
     if( !_enabled)
         return;
@@ -176,11 +190,11 @@ void WorldTileRenderer::render(RadarView *rv, float compassValue)
     pipeline.Push();
     pipeline.GetModel().LoadIdentity();
     pipeline.GetView().LoadIdentity();
-    pipeline.GetView().Translate(-rv->width()/2, -rv->height()/2,0);
+    pipeline.GetView().Translate(-_width/2, -_height/2,0);
     pipeline.GetView().Rotate(0,0,-compassValue);
-    pipeline.GetView().Translate(rv->width()/2, rv->height()/2,0);
+    pipeline.GetView().Translate(_width/2, _height/2,0);
     pipeline.GetProjection().LoadIdentity();
-    pipeline.GetProjection().SetOrthographic(0, rv->width(), rv->height(), 0, -1, 1);
+    pipeline.GetProjection().SetOrthographic(0, _width, _height, 0, -1, 1);
 
     pipeline.bindMatrices(_renderer->progId());
 

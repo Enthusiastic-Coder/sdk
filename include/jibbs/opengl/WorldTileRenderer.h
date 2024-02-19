@@ -46,17 +46,29 @@ public:
     };
 
     explicit WorldTileRenderer(QObject* parent=nullptr);
+
     void init(std::shared_ptr<QtTextureManager> texManager);
-    void releaseAllTextures();
+
+    void setDimensions(float width, float height);
+    void setGPSOrigin(GPSLocation location);
+    void setGPSToScreenCallBack(std::function<QPointF(GPSLocation)> callBack);
     void setEnabled(bool enabled);
-    void render(RadarView* rv, float compassValue);
+
+    void releaseAllTextures();
+    void render(float compassValue);
     void setSea(QColor c);
     void setGround(QColor c);
-    void BuildGroundTile(RadarView* rv,int tileWidth, int tileHeight);
+    void BuildGroundTile(int tileWidth, int tileHeight);
 
 private:
     bool _enabled = true;
+    GPSLocation  _getGPSOrigin;
+    float _width = 0;
+    float _height = 0;
+
+    std::function<QPointF(GPSLocation)> _toScreenCallBack = [](GPSLocation){return QPointF();};
     std::shared_ptr<QtTextureManager> _texManager;
+
     OpenGLShaderProgram _shader;
     QTimer* _timer =nullptr;
 
