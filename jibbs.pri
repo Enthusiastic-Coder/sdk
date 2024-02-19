@@ -76,6 +76,7 @@ SOURCES += \
     $$PWD/source/opengl/QtTextureManager.cpp \
     $$PWD/source/opengl/SkyBox.cpp \
     $$PWD/source/opengl/SkyDome.cpp \
+    $$PWD/source/opengl/WorldTileRenderer.cpp \
     $$PWD/source/utilities/QmlClipboardAdapter.cpp \
     $$PWD/source/utilities/RandomStringGenerator.cpp \
     $$PWD/source/utilities/TextureCacheManager.cpp \
@@ -126,6 +127,7 @@ HEADERS += \
     $$PWD/include/jibbs/opengl/QtTextureManager.h \
     $$PWD/include/jibbs/opengl/SkyBox.h \
     $$PWD/include/jibbs/opengl/SkyDome.h \
+    $$PWD/include/jibbs/opengl/WorldTileRenderer.h \
     $$PWD/include/jibbs/serializable/OGLTexture2D.h \
     $$PWD/include/jibbs/serializable/Serializable.h \
     $$PWD/include/jibbs/serializable/SerializableMacros.h \
