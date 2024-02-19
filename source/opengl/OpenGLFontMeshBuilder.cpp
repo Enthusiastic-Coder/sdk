@@ -1,8 +1,8 @@
+#include <jibbs/utilities/stdafx.h>
 #include <jibbs/opengl/OpenGLFontMeshBuilder.h>
 #include <jibbs/opengl/OpenGLFontTexture.h>
 #include <jibbs/opengl/OpenGLRenderer.h>
 
-#include "stdafx.h"
 
 OpenGLFontMeshBuilder::OpenGLFontMeshBuilder() :
     _fontTexture(nullptr)

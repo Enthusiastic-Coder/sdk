@@ -1,4 +1,5 @@
 
+#include <jibbs/utilities/stdafx.h>
 #include <jibbs/mesh/MeshData.h>
 #include <jibbs/opengl/OpenGLRenderer.h>
 #include <jibbs/opengl/OpenGLShaderProgram.h>
@@ -6,7 +7,6 @@
 
 #include <QDebug>
 
-#include "stdafx.h"
 
 SkyBox::SkyBox() : _texManager("SkyBox")
 {

@@ -65,6 +65,8 @@ SOURCES += \
     $$PWD/source/mesh/SceneLoader.cpp \
     $$PWD/source/mesh/SubScene.cpp \
     $$PWD/source/mesh/meshloader.cpp \
+    $$PWD/source/opengl/Flat3DSpere.cpp \
+    $$PWD/source/opengl/FlatSphere.cpp \
     $$PWD/source/opengl/OpenGLFontMeshBuilder.cpp \
     $$PWD/source/opengl/OpenGLFontRenderer.cpp \
     $$PWD/source/opengl/OpenGLFontTexture.cpp \
@@ -112,6 +114,8 @@ HEADERS += \
     $$PWD/include/jibbs/mesh/meshloader.h \
     $$PWD/include/jibbs/mesh/pivotData.h \
     $$PWD/include/jibbs/mesh/vertexData.h \
+    $$PWD/include/jibbs/opengl/Flat3DSpere.h \
+    $$PWD/include/jibbs/opengl/FlatSphere.h \
     $$PWD/include/jibbs/opengl/OpenGLFontMeshBuilder.h \
     $$PWD/include/jibbs/opengl/OpenGLFontRenderer.h \
     $$PWD/include/jibbs/opengl/OpenGLFontTexture.h \
@@ -128,6 +132,7 @@ HEADERS += \
     $$PWD/include/jibbs/utilities/QmlClipboardAdapter.h \
     $$PWD/include/jibbs/utilities/RandomStringGenerator.h \
     $$PWD/include/jibbs/utilities/permissions.h \
+    $$PWD/include/jibbs/utilities/stdafx.h \
     $$PWD/include/jibbs/vector/vector2.h \
     $$PWD/include/jibbs/vector/vector3.h \
     $$PWD/include/jibbs/vector/vector4.h \

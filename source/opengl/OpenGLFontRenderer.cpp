@@ -1,10 +1,10 @@
+#include <jibbs/utilities/stdafx.h>
 #include <jibbs/opengl/OpenGLFontRenderer.h>
 #include <jibbs/opengl/OpenGLFontTexture.h>
 #include <jibbs/opengl/OpenGLPipeline.h>
 #include <jibbs/opengl/OpenGLRenderer.h>
 #include <jibbs/opengl/OpenGLShaderProgram.h>
 
-#include "stdafx.h"
 
 void OpenGLFontRenderer::selectRenderer(Renderer *r)
 {
