@@ -61,7 +61,7 @@ bool MapTileEntries::add(QString name)
     if( it != _entries.end())
         return false;
 
-    MapTileEntry* entry = new MapTileEntry;
+    MapTileEntry* entry = new MapTileEntry(this);
     _entries[name] = QVariant::fromValue(entry);
 
     emit tilesChanged();
