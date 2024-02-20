@@ -54,6 +54,8 @@ CONFIG(release, debug|release) {
 }
 
 SOURCES += \
+    $$PWD/source/maptiles/MapTileEntries.cpp \
+    $$PWD/source/maptiles/MapTileEntry.cpp \
     $$PWD/source/math/QVRHdgTable.cpp \
     $$PWD/source/math/qhdgtable.cpp \
     $$PWD/source/mesh/AssimpMeshManager.cpp \
@@ -90,6 +92,8 @@ HEADERS += \
     $$PWD/include/jibbs/gps/GPSLocation.h \
     $$PWD/include/jibbs/gps/GPSModelTransform.h \
     $$PWD/include/jibbs/gps/GPSTileContainer.h \
+    $$PWD/include/jibbs/maptiles/MapTileEntries.h \
+    $$PWD/include/jibbs/maptiles/MapTileEntry.h \
     $$PWD/include/jibbs/math/BezierEquation.h \
     $$PWD/include/jibbs/math/Frustum.h \
     $$PWD/include/jibbs/math/MassChannel.h \
