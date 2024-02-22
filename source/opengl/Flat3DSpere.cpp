@@ -11,6 +11,7 @@
 #include <QFont>
 #include <QSettings>
 #include <QAuthenticator>
+#include <QCoreApplication>
 
 namespace {
 struct GPSCoordinates {
@@ -886,7 +887,8 @@ void Flat3DSphere::init()
     QSettings s;
 
     _strBuildDateTime = s.value(BuildVersion::BuildDateTime, "").toString();
-    _userInfo = "ADSBFlightTracker ";
+    _userInfo = QCoreApplication::applicationName();
+    _userInfo += " ";
     _userInfo += _strBuildDateTime;
     _userInfo += " ";
     _userInfo += QSysInfo::prettyProductName();
