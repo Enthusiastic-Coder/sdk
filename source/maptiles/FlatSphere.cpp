@@ -1,6 +1,6 @@
 #include <jibbs/utilities/stdafx.h>
 #include <jibbs/opengl/OpenGLPipeline.h>
-#include <jibbs/opengl/FlatSphere.h>
+#include <jibbs/maptiles/FlatSphere.h>
 
 #include <QString>
 #include <QDebug>

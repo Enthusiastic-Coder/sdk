@@ -1,7 +1,7 @@
 #include <jibbs/utilities/stdafx.h>
 #include <jibbs/opengl/OpenGLPipeline.h>
 #include <jibbs/math/qhdgtable.h>
-#include <jibbs/opengl/Flat3DSpere.h>
+#include <jibbs/maptiles/Flat3DSpere.h>
 
 #include <QString>
 #include <QDebug>

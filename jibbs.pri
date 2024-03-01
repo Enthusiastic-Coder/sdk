@@ -94,6 +94,8 @@ HEADERS += \
     $$PWD/include/jibbs/gps/GPSTileContainer.h \
     $$PWD/include/jibbs/maptiles/MapTileEntries.h \
     $$PWD/include/jibbs/maptiles/MapTileEntry.h \
+    $$PWD/include/jibbs/maptiles/Flat3DSpere.h \
+    $$PWD/include/jibbs/maptiles/FlatSphere.h \
     $$PWD/include/jibbs/math/BezierEquation.h \
     $$PWD/include/jibbs/math/Frustum.h \
     $$PWD/include/jibbs/math/MassChannel.h \
@@ -120,8 +122,6 @@ HEADERS += \
     $$PWD/include/jibbs/mesh/meshloader.h \
     $$PWD/include/jibbs/mesh/pivotData.h \
     $$PWD/include/jibbs/mesh/vertexData.h \
-    $$PWD/include/jibbs/opengl/Flat3DSpere.h \
-    $$PWD/include/jibbs/opengl/FlatSphere.h \
     $$PWD/include/jibbs/opengl/OpenGLFontMeshBuilder.h \
     $$PWD/include/jibbs/opengl/OpenGLFontRenderer.h \
     $$PWD/include/jibbs/opengl/OpenGLFontTexture.h \
