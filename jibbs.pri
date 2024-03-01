@@ -56,6 +56,8 @@ CONFIG(release, debug|release) {
 SOURCES += \
     $$PWD/source/maptiles/MapTileEntries.cpp \
     $$PWD/source/maptiles/MapTileEntry.cpp \
+    $$PWD/source/maptiles/Flat3DSpere.cpp \
+    $$PWD/source/maptiles/FlatSphere.cpp \
     $$PWD/source/math/QVRHdgTable.cpp \
     $$PWD/source/math/qhdgtable.cpp \
     $$PWD/source/mesh/AssimpMeshManager.cpp \
@@ -67,8 +69,6 @@ SOURCES += \
     $$PWD/source/mesh/SceneLoader.cpp \
     $$PWD/source/mesh/SubScene.cpp \
     $$PWD/source/mesh/meshloader.cpp \
-    $$PWD/source/opengl/Flat3DSpere.cpp \
-    $$PWD/source/opengl/FlatSphere.cpp \
     $$PWD/source/opengl/OpenGLFontMeshBuilder.cpp \
     $$PWD/source/opengl/OpenGLFontRenderer.cpp \
     $$PWD/source/opengl/OpenGLFontTexture.cpp \
