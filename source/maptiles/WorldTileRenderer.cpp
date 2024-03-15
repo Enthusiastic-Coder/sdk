@@ -1,6 +1,6 @@
 #include <jibbs/utilities/stdafx.h>
 #include <jibbs/opengl/OpenGLPipeline.h>
-#include <jibbs/opengl/WorldTileRenderer.h>
+#include <jibbs/maptiles/WorldTileRenderer.h>
 
 #include <QDebug>
 
