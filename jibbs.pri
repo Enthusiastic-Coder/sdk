@@ -54,6 +54,9 @@ CONFIG(release, debug|release) {
 }
 
 SOURCES += \
+    $$PWD/source/action/Action.cpp \
+    $$PWD/source/action/ActionGroup.cpp \
+    $$PWD/source/action/Menu.cpp \
     $$PWD/source/maptiles/MapTileEntries.cpp \
     $$PWD/source/maptiles/MapTileEntry.cpp \
     $$PWD/source/maptiles/Flat3DSpere.cpp \
@@ -85,6 +88,10 @@ SOURCES += \
     $$PWD/source/utilities/permissions.cpp
 
 HEADERS += \
+    $$PWD/include/jibbs/action/Action.h \
+    $$PWD/include/jibbs/action/ActionGroup.h \
+    $$PWD/include/jibbs/action/ActionValue.h \
+    $$PWD/include/jibbs/action/Menu.h \
     $$PWD/include/jibbs/boundary/BoundaryHelperT.h \
     $$PWD/include/jibbs/boundary/BoundingBox.h \
     $$PWD/include/jibbs/boundary/HeightData.h \
