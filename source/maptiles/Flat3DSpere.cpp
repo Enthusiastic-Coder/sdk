@@ -2,6 +2,7 @@
 #include <jibbs/opengl/OpenGLPipeline.h>
 #include <jibbs/math/qhdgtable.h>
 #include <jibbs/maptiles/Flat3DSpere.h>
+#include <jibbs/maptiles/TileHelpers.h>
 
 #include <QString>
 #include <QDebug>
@@ -12,88 +13,6 @@
 #include <QSettings>
 #include <QAuthenticator>
 #include <QCoreApplication>
-
-namespace {
-struct GPSCoordinates {
-    double latitude;
-    double longitude;
-};
-
-struct TileCoordinates {
-    int x;
-    int y;
-};
-
-struct TileCorners {
-    GPSCoordinates topLeft;
-    GPSCoordinates bottomRight;
-};
-
-TileCorners calculateTileCorners(int tileX, int tileY, int zoom) {
-    // Calculate GPS coordinates of the top-left corner of the current tile
-    double lon_deg_top_left = tileX / pow(2, zoom) * 360.0 - 180.0;
-    double lat_rad_top_left = atan(sinh(M_PI * (1 - 2 * tileY / pow(2, zoom))));
-    double lat_deg_top_left = lat_rad_top_left * 180.0 / M_PI;
-
-    // Calculate GPS coordinates of the bottom-right corner of the current tile
-    double lon_deg_bottom_right = (tileX + 1) / pow(2, zoom) * 360.0 - 180.0;
-    double lat_rad_bottom_right = atan(sinh(M_PI * (1 - 2 * (tileY + 1) / pow(2, zoom))));
-    double lat_deg_bottom_right = lat_rad_bottom_right * 180.0 / M_PI;
-
-    TileCorners corners;
-    corners.topLeft = {lat_deg_top_left, lon_deg_top_left};
-    corners.bottomRight = {lat_deg_bottom_right, lon_deg_bottom_right};
-
-    return corners;
-}
-
-TileCoordinates mapGPSToTile(double latitude, double longitude, int zoom) {
-    int n = pow(2, zoom);
-    double xtile = n * ((longitude + 180) / 360);
-    double ytile = n * (1 - (log(tan(latitude * M_PI / 180) + 1 / cos(latitude * M_PI / 180)) / M_PI)) / 2;
-
-    return {static_cast<int>(xtile), static_cast<int>(ytile)};
-}
-
-QString getTileURL(QString url, int zoom, int x, int y) {
-    url = url.replace("{x}", QString::number(x));
-    url = url.replace("{y}", QString::number(y));
-    url = url.replace("{zoom}", QString::number(zoom));
-    return url;
-}
-
-QString getTileId(int zoom, int tileX, int tileY) {
-    return QString("%1/%2/%3").arg(zoom).arg(tileX).arg(tileY);
-}
-
-QImage getTileImage(const QString msg, QColor bgColor=Qt::darkGray, int fontSize=14)
-{
-    static std::unordered_map<QString,QImage> imgTiles;
-
-    auto it = imgTiles.find(msg);
-    if( it == imgTiles.end())
-    {
-        QImage img = QImage(100,100, QImage::Format_RGBA8888);
-        QPainter p(&img);
-        p.fillRect(img.rect(), bgColor);
-
-        QPen pen(Qt::white);
-        p.setPen(pen);
-
-        QFont f("Verdana", fontSize);
-
-        p.drawRect(0, 0, img.width(), img.height());
-        QFontMetrics fm(f);
-        p.setFont(f);
-        p.drawText((-fm.horizontalAdvance(msg)+img.width())/2,(+fm.height()+img.height())/2, msg);
-        imgTiles[msg] = img;
-        return img;
-    }
-
-    return it->second;
-}
-
-}
 
 Flat3DSphere::Flat3DSphere()
 {
@@ -812,6 +731,14 @@ QString Flat3DSphere::getTileMapHost() const
     return _tileMapHost;
 }
 
+QString Flat3DSphere::getTileMapURL(int idx) const
+{
+    if( idx >= _tileMapURLs.size() || idx < 0)
+        return QLatin1String("");
+
+    return _tileMapURLs[idx];
+}
+
 void Flat3DSphere::setTileActive(bool bActive)
 {
     if( _tileMapActive == bActive)
@@ -822,9 +749,9 @@ void Flat3DSphere::setTileActive(bool bActive)
     resetTiles();
 }
 
-void Flat3DSphere::setTileMapURL(size_t idx, QString url)
+void Flat3DSphere::setTileMapURL(int idx, QString url)
 {
-    if( idx < _tileMapURLs.size())
+    if( idx < static_cast<int>(_tileMapURLs.size()))
     {
         if( _tileMapURLs[idx] == url)
             return;

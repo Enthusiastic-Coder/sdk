@@ -38,9 +38,10 @@ public:
     bool getTileActive() const;
     bool getTileShowRunway() const;
     QString getTileMapHost() const;
+    QString getTileMapURL(int idx) const;
 
     void setTileActive(bool bActive);
-    void setTileMapURL(size_t idx, QString url);
+    void setTileMapURL(int idx, QString url);
     void setTileShowZoom(bool show);
     void setTileShowRunway(bool show);
     void setTileMapUser(QString user);

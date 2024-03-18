@@ -103,6 +103,7 @@ HEADERS += \
     $$PWD/include/jibbs/maptiles/MapTileEntry.h \
     $$PWD/include/jibbs/maptiles/Flat3DSpere.h \
     $$PWD/include/jibbs/maptiles/FlatSphere.h \
+    $$PWD/include/jibbs/maptiles/TileHelpers.h \
     $$PWD/include/jibbs/maptiles/WorldTileRenderer.h \
     $$PWD/include/jibbs/math/BezierEquation.h \
     $$PWD/include/jibbs/math/Frustum.h \
