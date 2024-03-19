@@ -8,7 +8,7 @@
 #include <QPainter>
 #include <QtMath>
 
-#include <unordered_map>w
+#include <unordered_map>
 
 struct GPSCoordinates {
     double latitude;
