@@ -73,12 +73,7 @@ static QImage getTileImage(const QString msg, QColor bgColor=Qt::darkGray, int f
         QPainter p(&img);
         p.fillRect(img.rect(), bgColor);
 
-        QPen pen(Qt::white);
-        p.setPen(pen);
-
         QFont f("Verdana", fontSize);
-
-        p.drawRect(0, 0, img.width(), img.height());
         QFontMetrics fm(f);
         p.setFont(f);
         p.drawText((-fm.horizontalAdvance(msg)+img.width())/2,(+fm.height()+img.height())/2, msg);
