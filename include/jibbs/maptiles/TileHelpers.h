@@ -64,9 +64,11 @@ static QString getTileId(int zoom, int tileX, int tileY) {
 
 static QImage getTileImage(const QString msg, QColor bgColor=Qt::darkGray, int fontSize=14)
 {
-    static std::unordered_map<QString,QImage> imgTiles;
+    static std::unordered_map<size_t,QImage> imgTiles;
 
-    auto it = imgTiles.find(msg);
+    const size_t hashId = qHash(msg) ^ qHash(bgColor.rgba()) ^ qHash(fontSize);
+
+    auto it = imgTiles.find(hashId);
     if( it == imgTiles.end())
     {
         QImage img = QImage(100,100, QImage::Format_RGBA8888);
@@ -77,7 +79,7 @@ static QImage getTileImage(const QString msg, QColor bgColor=Qt::darkGray, int f
         QFontMetrics fm(f);
         p.setFont(f);
         p.drawText((-fm.horizontalAdvance(msg)+img.width())/2,(+fm.height()+img.height())/2, msg);
-        imgTiles[msg] = img;
+        imgTiles[hashId] = img;
         return img;
     }
 
