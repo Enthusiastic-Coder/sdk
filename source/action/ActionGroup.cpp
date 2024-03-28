@@ -8,6 +8,8 @@ void ActionGroup::addAction(Action *a)
 {
     _actions.append(QVariant::fromValue(a));
     a->setGroup(this);
+    emit actionsChanged();
+    emit lengthChanged();
 }
 
 Action *ActionGroup::checkedAction() const
@@ -35,6 +37,11 @@ void ActionGroup::triggerNext()
         index = 0;
 
     trigger(_actions[index].value<Action*>());
+}
+
+int ActionGroup::getLength() const
+{
+    return _actions.length();
 }
 
 void ActionGroup::trigger(Action *a)

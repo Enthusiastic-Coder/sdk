@@ -7,9 +7,10 @@
 class ActionGroup : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QVariantList actions MEMBER _actions CONSTANT)
+    Q_PROPERTY(QVariantList actions MEMBER _actions NOTIFY actionsChanged)
     Q_PROPERTY(QString title MEMBER _title CONSTANT)
     Q_PROPERTY(Action* checkedAction READ checkedAction CONSTANT)
+    Q_PROPERTY(int length READ getLength NOTIFY lengthChanged)
 public:
     explicit ActionGroup(QObject *parent = nullptr);
 
@@ -19,8 +20,12 @@ public:
     void setTitle(const QString& );
     void triggerNext();
 
+    int getLength() const;
+
 signals:
     void triggered(Action* a);
+    void actionsChanged();
+    void lengthChanged();
 
 public slots:
     void trigger(Action *a);

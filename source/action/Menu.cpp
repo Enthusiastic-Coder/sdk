@@ -38,6 +38,7 @@ void Menu::addAction(Action *a)
 {
     _varActions << QVariant::fromValue(a);
     _actions << a;
+    emit lengthChanged();
     emit actionsChanged();
 }
 
@@ -45,6 +46,7 @@ void Menu::removeAction(Action *a)
 {
     _actions.removeOne(a);
     _varActions.removeOne(QVariant::fromValue(a));
+    emit lengthChanged();
     emit actionsChanged();
 }
 
@@ -97,4 +99,9 @@ void Menu::setData(const QVariant &var)
 QVariant Menu::data() const
 {
     return _data;
+}
+
+int Menu::getLength() const
+{
+    return _varActions.length();
 }

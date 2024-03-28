@@ -13,6 +13,7 @@ class Menu : public QObject
     Q_PROPERTY(QString title MEMBER _title CONSTANT)
     Q_PROPERTY(QVariantList subMenus MEMBER _varSubMenus CONSTANT)
     Q_PROPERTY(QVariant data READ data NOTIFY dataChanged)
+    Q_PROPERTY(int length READ getLength NOTIFY lengthChanged)
 public:
     explicit Menu(QObject *parent = nullptr);
     explicit Menu(const QString& title, QObject *parent = nullptr);
@@ -35,9 +36,12 @@ public:
     void setData(const QVariant& var);
     QVariant data() const;
 
+    int getLength() const;
+
 signals:
     void dataChanged(QVariant);
     void actionsChanged();
+    void lengthChanged();
 
 public slots:
 
