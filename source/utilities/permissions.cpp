@@ -9,7 +9,7 @@ namespace {
 
 bool shouldShowRequestPermissionRationale(const QString &permission)
 {
-    if (QtAndroidPrivate::androidSdkVersion() < 23 || !QtAndroidPrivate::activity())
+    if (QtAndroidPrivate::androidSdkVersion() < 23)
         return false;
 
     return QJniObject(QtAndroidPrivate::activity()).callMethod<jboolean>("shouldShowRequestPermissionRationale", "(Ljava/lang/String;)Z",
