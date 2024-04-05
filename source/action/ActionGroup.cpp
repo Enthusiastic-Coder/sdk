@@ -32,7 +32,13 @@ void ActionGroup::triggerNext()
     if( _actions.size() < 2)
         return;
 
-    int index = _actions.indexOf(QVariant::fromValue(_checkedAction)) + 1;
+    int index = 0;
+
+    if( _checkedAction != nullptr)
+        index = _actions.indexOf(QVariant::fromValue(_checkedAction));
+
+    ++index;
+
     if( index == _actions.size())
         index = 0;
 
