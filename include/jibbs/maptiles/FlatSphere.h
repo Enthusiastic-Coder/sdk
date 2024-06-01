@@ -5,10 +5,10 @@
 #include <jibbs/opengl/OpenGLRenderer.h>
 #include <jibbs/opengl/OpenGLShaderProgram.h>
 #include <jibbs/mesh/MeshData.h>
+#include <jibbs/utilities/color3.h>
 
 #include <QOpenGLTexture>
 #include <memory>
-#include "color3.h"
 
 #include <QOpenGLBuffer>
 

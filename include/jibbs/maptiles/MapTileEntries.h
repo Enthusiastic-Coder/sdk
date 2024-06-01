@@ -1,7 +1,7 @@
 #ifndef MAPTILEENTRIES_H
 #define MAPTILEENTRIES_H
 
-#include "IPersist.h"
+#include <jibbs/utilities/IPersist.h>
 
 #include <QObject>
 #include <QSettings>
