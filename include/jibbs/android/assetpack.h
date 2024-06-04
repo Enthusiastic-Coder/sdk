@@ -18,4 +18,4 @@ struct AssetLocation {
 
 #endif
 
-QByteArray getDataFromAsset(const QString &assetPackName, const QString &fileName);
+QByteArray getDataFromAsset(const QString &assetPackName, const QString &fileName, QString javaNamespace="");

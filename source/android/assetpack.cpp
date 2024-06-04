@@ -36,9 +36,9 @@ AssetPackLocation getAssetPackLocation(const QString &assetPackName)
     return location;
 }
 
-AssetLocation getAssetLocation(const QString &assetPackName, const QString &fileName) {
+AssetLocation getAssetLocation(const QString &assetPackName, const QString &fileName, QString javaNamespace) {
     QJniObject context = QNativeInterface::QAndroidApplication::context();
-    QJniObject assetHelper("com/enthusiasticcoder/aihorizon/AssetPackHelper",
+    QJniObject assetHelper( (javaNamespace + "/AssetPackHelper").toStdString().c_str(),
                            "(Landroid/content/Context;)V",
                            context.object<jobject>());
 
@@ -64,10 +64,10 @@ AssetLocation getAssetLocation(const QString &assetPackName, const QString &file
 }
 #endif
 
-QByteArray getDataFromAsset(const QString &assetPackName, const QString &fileName)
+QByteArray getDataFromAsset(const QString &assetPackName, const QString &fileName, QString javaNamespace)
 {
 #ifdef Q_OS_ANDROID
-    AssetLocation loc = getAssetLocation(assetPackName, fileName);
+    AssetLocation loc = getAssetLocation(assetPackName, fileName, javaNamespace);
 
     QByteArray data;
 
