@@ -85,7 +85,8 @@ SOURCES += \
     $$PWD/source/utilities/QmlClipboardAdapter.cpp \
     $$PWD/source/utilities/RandomStringGenerator.cpp \
     $$PWD/source/utilities/TextureCacheManager.cpp \
-    $$PWD/source/utilities/permissions.cpp
+    $$PWD/source/utilities/permissions.cpp \
+    $$PWD/source/android/assetpack.cpp
 
 HEADERS += \
     $$PWD/include/jibbs/action/Action.h \
@@ -154,4 +155,5 @@ HEADERS += \
     $$PWD/include/jibbs/vector/vector4.h \
     $$PWD/include/jibbs/win/OGLWtlWndImpl.h \
     $$PWD/include/jibbs/win/Win32JoystickController.h \
-    $$PWD/include/jibbs/win/openglhwnd.h
+    $$PWD/include/jibbs/win/openglhwnd.h \
+    $$PWD/include/jibbs/android/assetpack.cpp
