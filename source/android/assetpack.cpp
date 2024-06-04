@@ -80,7 +80,7 @@ QByteArray getDataFromAsset(const QString &assetPackName, const QString &fileNam
 
     return data;
 #else
-    QFile file(fileName);
+    QFile file(assetPackName + "/" + fileName);
     if (file.open(QIODevice::ReadOnly))
     {
         return file.readAll();
