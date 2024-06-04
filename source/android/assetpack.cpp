@@ -6,6 +6,7 @@
 
 #include <QJniObject>
 #include <QJniEnvironment>
+#include <QCoreApplication>
 
 AssetPackLocation getAssetPackLocation(const QString &assetPackName)
 {
