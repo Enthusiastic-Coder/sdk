@@ -2,7 +2,6 @@
 
 #include <QString>
 
-#ifdef Q_OS_ANDROID
 struct AssetPackLocation {
     QString assetPath;
     int storage;
@@ -16,6 +15,17 @@ struct AssetLocation {
     long size =0l;
 };
 
-#endif
 
-QByteArray getDataFromAsset(const QString &assetPackName, const QString &fileName, QString javaNamespace="");
+class AssetPack
+{
+public:
+    AssetPack(QString javaNamespace);
+
+    QByteArray getDataFromAsset(const QString &assetPackName, const QString &fileName);
+
+    AssetPackLocation getAssetPackLocation(const QString &assetPackName);
+    AssetLocation getAssetLocation(const QString &assetPackName, const QString &fileName);
+
+private:
+    QString _javaNamespace;
+};
