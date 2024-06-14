@@ -12,6 +12,11 @@ CONFIG(debug, debug|release) {
 
 win32{
 DESTDIR = $$OUT_PWD/$$CONFIGURATION
+OBJECTS_DIR = $$OUT_PWD/.obj
+MOC_DIR = $$OUT_PWD/.moc
+RCC_DIR = $$OUT_PWD/.rcc
+UI_DIR = $$OUT_PWD/.ui
+
 
     DEPLOY_DIR = $$DESTDIR
 }
