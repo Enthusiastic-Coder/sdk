@@ -15,5 +15,5 @@ const QuarternionF &QHdgTable::Hdg(int hdg)
 QHdgTable::QHdgTable()
 {
     for( int i=0; i <= 360; ++i)
-        _qTable.push_back(MathSupport<float>::MakeQHeading(i));
+        _qTable.push_back(MathSupport<float>::MakeQHeading(-i));
 }
