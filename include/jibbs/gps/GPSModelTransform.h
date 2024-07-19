@@ -1,9 +1,8 @@
 #pragma once
 
-#include <utility>
-#include "Serializable.h"
-#include <Quarternion.h>
-#include <vector3.h>
+#include <jibbs/gps/GPSLocation.h>
+#include <jibbs/math/Quarternion.h>
+#include <jibbs/vector/vector3.h>
 
 class GPSModelTransform
 {
