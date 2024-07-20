@@ -1,6 +1,7 @@
 #pragma once
 
-#include "MathSupport.h"
+#include <jibbs/math/MathSupport.h>
+#include <jibbs/vector/vector2.h>
 
 template<typename T>
 class BezierEquation
@@ -16,7 +17,7 @@ public:
     {
     }
 
-    void calculate( Vector<T> p0, Vector<T> p1, Vector<T> p2, Vector<T> p3)
+    void calculate( Vector2<T> p0, Vector2<T> p1, Vector2<T> p2, Vector2<T> p3)
     {
         _p0 = p0;
 
@@ -29,9 +30,9 @@ public:
         _ay = p3.y - p0.y - _cy - _by;
     }
 
-    Vector<T> getValue( T t )
+    Vector2<T> getValue( T t )
     {
-        return Vector<T>(  _ax * t * t * t + _bx * t * t + _cx * t + _p0.x, 0,
+        return Vector2<T>(  _ax * t * t * t + _bx * t * t + _cx * t + _p0.x, 0,
                            _ay * t * t * t + _by * t * t + _cy * t + _p0.y);
     }
 
@@ -39,5 +40,5 @@ private:
     T _ax, _bx, _cx;
     T _ay, _by, _cy;
 
-    Vector<T> _p0;
+    Vector2<T> _p0;
 };

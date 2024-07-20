@@ -2,7 +2,7 @@
 
 #include <jibbs/boundary/BoundingBox.h>
 #include <jibbs/vector/vector3.h>
-#include "MathSupport.h"
+#include <jibbs/math/MathSupport.h>
 #include <limits>
 #include <vector>
 
