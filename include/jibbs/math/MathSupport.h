@@ -29,19 +29,19 @@ public:
 
     static Quarternion<T> MakeQPitch(T ang)
     {
-        T fRad = DegreesToRadians( -ang/2 );
+        T fRad = DegreesToRadians( ang/2 );
         return Quarternion<T>( cos( fRad ), sin( fRad ), 0, 0 );
     }
 
     static Quarternion<T> MakeQBank(T ang)
     {
-        T fRad = DegreesToRadians( -ang/2 );
+        T fRad = DegreesToRadians( ang/2 );
         return Quarternion<T>( cos( fRad), 0, 0, sin( fRad ) );
     };
 
     static Quarternion<T> MakeQHeading(T ang)
     {
-        T fRad = DegreesToRadians( -ang/2 );
+        T fRad = DegreesToRadians( ang/2 );
         return Quarternion<T>( cos( fRad ), 0, sin( fRad ), 0 );
     };
 
@@ -59,9 +59,9 @@ public:
     {
         Quarternion<T>	q;
 
-        T	roll = DegreesToRadians(-z);
-        T	pitch = DegreesToRadians(-x);
-        T	yaw = DegreesToRadians(-y);
+        T	roll = DegreesToRadians(z);
+        T	pitch = DegreesToRadians(x);
+        T	yaw = DegreesToRadians(y);
 
         T	cyaw, cpitch, croll, syaw, spitch, sroll;
         T	cyawcpitch, syawspitch, cyawspitch, syawcpitch;
@@ -149,34 +149,16 @@ public:
             r12 = 2 * (q.v.z*q.v.x - q.n*q.v.y);
             r13 = 2 * (q.v.z*q.v.y + q.n*q.v.x);
 
-            u.x = -RadiansToDegrees((T) (-(M_PI/2) * r31/tmp)); // pitch
-            u.y = -RadiansToDegrees((T) atan2(-r12, -r31*r13)); // yaw
-            u.z = -RadiansToDegrees(T(0.0)); //roll
+            u.x = RadiansToDegrees((T) (-(M_PI/2) * r31/tmp)); // pitch
+            u.y = RadiansToDegrees((T) atan2(-r12, -r31*r13)); // yaw
+            u.z = RadiansToDegrees(T(0.0)); //roll
         }
         else
         {
-            u.x = -RadiansToDegrees((T) asin(-r31));		 // pitch
-            u.y = -RadiansToDegrees((T) atan2(r21, r11)); // yaw
-            u.z = -RadiansToDegrees((T) atan2(r32, r33)); // roll
+            u.x = RadiansToDegrees((T) asin(-r31));		 // pitch
+            u.y = RadiansToDegrees((T) atan2(r21, r11)); // yaw
+            u.z = RadiansToDegrees((T) atan2(r32, r33)); // roll
         }
-
-        while( u.y < 0 )
-            u.y += 360;
-
-        while( u.y >=360 )
-            u.y -= 360;
-
-        while( u.x < -180 )
-            u.x += 360;
-
-        while( u.x > 180 )
-            u.x -= 360;
-
-        while( u.z < -180 )
-            u.z += 360;
-
-        while( u.z > 180 )
-            u.z -= 360;
 
         return u;
     }
