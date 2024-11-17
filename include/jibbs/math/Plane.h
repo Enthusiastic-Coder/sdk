@@ -12,10 +12,7 @@ public:
     T D;
     Quarternion<T> Q;
 
-    Plane()
-    {
-        Set(0,0,0,0);
-    }
+    Plane() : N(0, 0, 0), D(0), Q() {}
 
     Plane( float a, float b, float c, float d = 0)
     {
@@ -84,28 +81,24 @@ public:
     {
         N -= rhs.N;
         D -= rhs.D;
+        return *this;
     }
 
     Plane operator-(const Plane & rhs ) const
     {
-        Plane copy(*this);
-        copy.N -= rhs.N;
-        copy.D -= rhs.D;
-        return copy;
+        return Plane(N - rhs.N, D - rhs.D);
     }
 
     Plane& operator+=(const Plane & rhs )
     {
         N += rhs.N;
         D += rhs.D;
+        return *this;
     }
 
     Plane operator+(const Plane & rhs ) const
     {
-        Plane copy(*this);
-        copy.N += rhs.N;
-        copy.D += rhs.D;
-        return copy;
+        return Plane(N + rhs.N, D + rhs.D);
     }
 
     Plane Unit() const
@@ -115,7 +108,10 @@ public:
 
     void Normalize()
     {
-        operator/=(Magnitude() );
+        T mag = Magnitude();
+        if (mag > std::numeric_limits<T>::epsilon()) {
+            operator/=(mag);
+        }
     }
 
     float Height(const Vector3F& pos) const

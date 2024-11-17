@@ -5,8 +5,8 @@
 #include <vector>
 #include <limits>
 
-#include "vector3.h"
-#include "Plane.h"
+#include "../vector/vector3.h"
+#include "../math/Plane.h"
 #include <limits>
 
 class BoundaryHelperT

@@ -1,21 +1,22 @@
 #pragma once
 
-#include "vector2.h"
-#include "vector3.h"
-#include "vector4.h"
-#include "Matrix3x3.h"
-#include "Matrix4x4.h"
-#include "Quarternion.h"
-#include "BoundingBox.h"
-#include "GPSLocation.h"
+#include <jibbs/vector/vector2.h>
+#include <jibbs/vector/vector3.h>
+#include <jibbs/vector/vector4.h>
+#include <jibbs/matrix/Matrix3x3.h>
+#include <jibbs/matrix/Matrix4x4.h>
+#include <jibbs/math/Quarternion.h>
 
-#include "Frustum.h"
+#include <jibbs/boundary/BoundingBox.h>
+#include <jibbs/gps/GPSLocation.h>
+
+#include <jibbs/math/Frustum.h>
+#include <jibbs/boundary/BoundaryHelperT.h>
+#include <jibbs/math/Plane.h>
+
 #include "HeightData.h"
 #include "MeshHelper.h"
-#include "BoundaryHelperT.h"
-#include "BoundingBox.h"
 #include "MatrixArrayCoords.h"
-#include "Plane.h"
 
 
 struct IReadStream

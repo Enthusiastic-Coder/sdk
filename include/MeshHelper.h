@@ -1,7 +1,7 @@
 #pragma once
 
-#include "BoundingBox.h"
-#include "MathSupport.h"
+#include <jibbs/boundary/BoundingBox.h>
+#include <jibbs/math/MathSupport.h>
 #include <limits>
 
 class MeshHelper

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "MathSupport.h"
+#include <jibbs/math/MathSupport.h>
+#include <jibbs/math/Plane.h>
 #include <algorithm>
-#include <Quarternion.h>
+#include <jibbs/math/Quarternion.h>
 #include <vector>
-#include <Plane.h>
 
 class HeightData
 {

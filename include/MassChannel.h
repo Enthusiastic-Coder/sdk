@@ -1,8 +1,8 @@
 #pragma once
 
-#include <MathSupport.h>
-#include <vector3.h>
-#include <Matrix3x3.h>
+#include <jibbs/math/MathSupport.h>
+#include <jibbs/vector/vector3.h>
+#include <jibbs/matrix/Matrix3x3.h>
 
 class MassChannel
 {
