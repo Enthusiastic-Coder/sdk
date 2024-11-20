@@ -29,19 +29,19 @@ public:
 
     static Quarternion<T> MakeQPitch(T ang)
     {
-        T fRad = DegreesToRadians( ang/2 );
+        T fRad = DegreesToRadians( -ang/2 );
         return Quarternion<T>( cos( fRad ), sin( fRad ), 0, 0 );
     }
 
     static Quarternion<T> MakeQBank(T ang)
     {
-        T fRad = DegreesToRadians( ang/2 );
+        T fRad = DegreesToRadians( -ang/2 );
         return Quarternion<T>( cos( fRad), 0, 0, sin( fRad ) );
     };
 
     static Quarternion<T> MakeQHeading(T ang)
     {
-        T fRad = DegreesToRadians( ang/2 );
+        T fRad = DegreesToRadians( -ang/2 );
         return Quarternion<T>( cos( fRad ), 0, sin( fRad ), 0 );
     };
 
@@ -59,9 +59,9 @@ public:
     {
         Quarternion<T>	q;
 
-        T	roll = DegreesToRadians(z);
-        T	pitch = DegreesToRadians(x);
-        T	yaw = DegreesToRadians(y);
+        T	roll = DegreesToRadians(-z);
+        T	pitch = DegreesToRadians(-x);
+        T	yaw = DegreesToRadians(-y);
 
         T	cyaw, cpitch, croll, syaw, spitch, sroll;
         T	cyawcpitch, syawspitch, cyawspitch, syawcpitch;
@@ -165,7 +165,7 @@ public:
 
     static Vector3<T> debugVFromQ(Quarternion<T> q)
     {
-        Vector3<T> v = MakeEuler(q);
+        Vector3<T> v = -MakeEuler(q);
         v.y = -v.y;
         if( v.y < 0 ) v.y+=360;
         return v;
