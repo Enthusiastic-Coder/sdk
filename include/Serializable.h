@@ -13,11 +13,10 @@
 #include <jibbs/math/Frustum.h>
 #include <jibbs/boundary/BoundaryHelperT.h>
 #include <jibbs/math/Plane.h>
+#include <jibbs/matrix/MatrixArrayCoords.h>
 
 #include "HeightData.h"
 #include "MeshHelper.h"
-#include "MatrixArrayCoords.h"
-
 
 struct IReadStream
 {
