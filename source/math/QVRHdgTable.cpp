@@ -18,5 +18,5 @@ Vector3F QVRHdgTable::qvr(int hdg, float Z)
 QVRHdgTable::QVRHdgTable()
 {
     for( int i=0; i <= 360; ++i)
-        _qvrTable.push_back(QVRotate(MathSupport<float>::MakeQHeading(-i), Vector3F(0,0,-s_Factor)));
+        _qvrTable.push_back(QVRotate(MathSupport<float>::MakeQHeading(i), Vector3F(0,0,-s_Factor)));
 }
