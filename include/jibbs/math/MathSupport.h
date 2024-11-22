@@ -29,20 +29,17 @@ public:
 
     static Quarternion<T> MakeQPitch(T ang)
     {
-        T fRad = DegreesToRadians( -ang/2 );
-        return Quarternion<T>( cos( fRad ), sin( fRad ), 0, 0 );
+        return MakeQ(ang, 0, 0);
     }
 
     static Quarternion<T> MakeQBank(T ang)
     {
-        T fRad = DegreesToRadians( -ang/2 );
-        return Quarternion<T>( cos( fRad), 0, 0, sin( fRad ) );
+        return MakeQ(0, 0, ang);
     };
 
     static Quarternion<T> MakeQHeading(T ang)
     {
-        T fRad = DegreesToRadians( -ang/2 );
-        return Quarternion<T>( cos( fRad ), 0, sin( fRad ), 0 );
+        return MakeQ(0, ang, 0);
     };
 
     static Quarternion<T> MakeQ(const Vector3<T> &v )
