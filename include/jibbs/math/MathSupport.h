@@ -29,17 +29,17 @@ public:
 
     static Quarternion<T> MakeQPitch(T ang)
     {
-        return MakeQ(ang, 0, 0);
+        return MakeQ(-ang, 0, 0);
     }
 
     static Quarternion<T> MakeQBank(T ang)
     {
-        return MakeQ(0, 0, ang);
+        return MakeQ(0, 0, -ang);
     };
 
     static Quarternion<T> MakeQHeading(T ang)
     {
-        return MakeQ(0, ang, 0);
+        return MakeQ(0, -ang, 0);
     };
 
     static Quarternion<T> MakeQ(const Vector3<T> &v )
@@ -49,7 +49,7 @@ public:
 
     static Quarternion<T> MakeQ( const Plane<T> &p )
     {
-        return MakeQ(-MakeEulerFromNormal(p.N));
+        return MakeQ(MakeEulerFromNormal(p.N));
     }
 
     static Quarternion<T> MakeQ(T x, T y, T z )
