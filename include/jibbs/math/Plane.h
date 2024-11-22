@@ -42,7 +42,7 @@ public:
     {
         N = Vector3<T>(a,b,c);
         D = d;
-        Q = MathSupport<T>::MakeQ( *this );
+        Q = MathSupport<T>::MakeQOrientation( *this );
     }
 
     float Magnitude() const

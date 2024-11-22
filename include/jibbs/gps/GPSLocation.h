@@ -168,7 +168,7 @@ public:
 
     Quarternion<double> makeQ( const Vector3D& euler) const
     {
-        return makeQ() * MathSupport<double>::MakeQ(euler);
+        return makeQ() * MathSupport<double>::MakeQOrientation(euler);
     }
 
     Quarternion<double> makeQ( double x, double y, double z) const
@@ -178,7 +178,7 @@ public:
 
     Quarternion<double> makeQ() const
     {
-        return MathSupport<double>::MakeQ( makeEuler() );
+        return MathSupport<double>::MakeQOrientation( makeEuler() );
     }
 
     static float calcBearingXZ( const Vector3F& fromV, const Vector3F& toV )

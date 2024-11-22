@@ -42,14 +42,14 @@ public:
         return MakeQ(0, -ang, 0);
     };
 
-    static Quarternion<T> MakeQ(const Vector3<T> &v )
+    static Quarternion<T> MakeQOrientation(const Vector3<T> &v )
     {
         return MakeQ(-v.x, -v.y, -v.z);
     }
 
-    static Quarternion<T> MakeQ( const Plane<T> &p )
+    static Quarternion<T> MakeQOrientation( const Plane<T> &p )
     {
-        return MakeQ(MakeEulerFromNormal(p.N));
+        return MakeQOrientation(MakeEulerFromNormal(p.N));
     }
 
     static Quarternion<T> MakeQ(T x, T y, T z )
