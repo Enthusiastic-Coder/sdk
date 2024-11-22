@@ -47,21 +47,21 @@ public:
 
     static Quarternion<T> MakeQ(const Vector3<T> &v )
     {
-        return MakeQ(v.x, v.y, v.z);
+        return MakeQ(-v.x, -v.y, -v.z);
     }
 
     static Quarternion<T> MakeQ( const Plane<T> &p )
     {
-        return MakeQ(MakeEulerFromNormal(p.N));
+        return MakeQ(-MakeEulerFromNormal(p.N));
     }
 
     static Quarternion<T> MakeQ(T x, T y, T z )
     {
         Quarternion<T>	q;
 
-        T	roll = DegreesToRadians(-z);
-        T	pitch = DegreesToRadians(-x);
-        T	yaw = DegreesToRadians(-y);
+        T	roll = DegreesToRadians(z);
+        T	pitch = DegreesToRadians(x);
+        T	yaw = DegreesToRadians(y);
 
         T	cyaw, cpitch, croll, syaw, spitch, sroll;
         T	cyawcpitch, syawspitch, cyawspitch, syawcpitch;

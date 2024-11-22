@@ -173,7 +173,7 @@ public:
 
     Quarternion<double> makeQ( double x, double y, double z) const
     {
-        return makeQ() * MathSupport<double>::MakeQ(x,y,z);
+        return makeQ() * MathSupport<double>::MakeQ(-x,-y,-z);
     }
 
     Quarternion<double> makeQ() const
