@@ -614,7 +614,7 @@ template<class T>
 inline void Matrix4x4<T>::LookAt(const GPSLocation& eye, const GPSLocation& center, Vector3<T> up)
 {
     Vector3D forward = center.position() - eye.position();
-    forward = QVRotate(~eye.makeQ(), forward);
+    forward = QVRotate(~eye.makeQOrientation(), forward);
     if constexpr (std::is_same<T, double>::value)
     {
         LookAtHelper(forward, up);

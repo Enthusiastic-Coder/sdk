@@ -20,7 +20,7 @@ public:
     void setLocation(const GPSLocation & location)
     {
         _Location = location;
-        _qAntiOrientation = ~_Location.makeQ();
+        _qAntiOrientation = ~_Location.makeQOrientation();
     }
 
     Vector3F LocalFlatToLocal( Vector3F pt, QuarternionF qOrientation = QuarternionF::Q0() ) const

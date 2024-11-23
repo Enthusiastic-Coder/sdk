@@ -166,17 +166,17 @@ public:
         return n;
     }
 
-    Quarternion<double> makeQ( const Vector3D& euler) const
+    Quarternion<double> makeQOrientation( const Vector3D& euler) const
     {
-        return makeQ() * MathSupport<double>::MakeQOrientation(euler);
+        return makeQOrientation(euler.x, euler.y, euler.z);
     }
 
-    Quarternion<double> makeQ( double x, double y, double z) const
+    Quarternion<double> makeQOrientation( double x, double y, double z) const
     {
-        return makeQ() * MathSupport<double>::MakeQ(-x,-y,-z);
+        return makeQOrientation() *  MathSupport<double>::MakeQOrientation(x, y, z);
     }
 
-    Quarternion<double> makeQ() const
+    Quarternion<double> makeQOrientation() const
     {
         return MathSupport<double>::MakeQOrientation( makeEuler() );
     }

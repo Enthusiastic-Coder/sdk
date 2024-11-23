@@ -44,7 +44,12 @@ public:
 
     static Quarternion<T> MakeQOrientation(const Vector3<T> &v )
     {
-        return MakeQ(-v.x, -v.y, -v.z);
+        return MakeQOrientation(v.x, v.y, v.z);
+    }
+
+    static Quarternion<T> MakeQOrientation(T x, T y, T z)
+    {
+        return MakeQ(-x, -y, -z);
     }
 
     static Quarternion<T> MakeQOrientation( const Plane<T> &p )
@@ -104,12 +109,12 @@ public:
     {
         T xy = sqrt(n.x*n.x + n.y*n.y);
 
-        if( fabs(xy) < std::numeric_limits<float>::epsilon() )
+        if( fabs(xy) < std::numeric_limits<T>::epsilon() )
             return Vector3<T>();
 
         T zy = sqrt(n.z*n.z + n.y*n.y);
 
-        if( fabs(zy) < std::numeric_limits<float>::epsilon() )
+        if( fabs(zy) < std::numeric_limits<T>::epsilon() )
             return Vector3<T>();
 
         Vector3<T> ret(R2D(atan(n.z / xy)), 0, R2D(atan(n.x / zy)));
