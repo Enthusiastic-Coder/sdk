@@ -15,66 +15,42 @@
 #include <jibbs/math/Plane.h>
 #include <jibbs/matrix/MatrixArrayCoords.h>
 
-#include "HeightData.h"
-#include "MeshHelper.h"
 
 struct IReadStream
 {
-    virtual void Read(bool&) = 0;
-    virtual void Read(char&) = 0;
-    virtual void Read(short&) = 0;
-    virtual void Read(int&) = 0;
-    virtual void Read(long&) = 0;
-    virtual void Read(float&) = 0;
-    virtual void Read(double&) = 0;
-    virtual void Read(size_t&) = 0;
-    virtual void Read(unsigned short&) = 0;
-    virtual void Read(GPSLocation &) = 0;
-    virtual void Read(std::string&) = 0;
-    virtual void Read(Vector3F&) = 0;
-    virtual void Read(Vector4F&) = 0;
-    virtual void Read(Vector3D&) = 0;
-    virtual void Read(Vector2D&) = 0;
-    virtual void Read(Vector2F&) = 0;
-    virtual void Read(Matrix3x3F&) = 0;
-    virtual void Read(Matrix3x3D&) = 0;
-    virtual void Read(Matrix4x4F&) = 0;
-    virtual void Read(Matrix4x4D&) = 0;
-    virtual void Read(QuarternionF&) = 0;
-    virtual void Read(QuarternionD&) = 0;
-    virtual void Read(BoundingBox&) = 0;
-    virtual void Read(MatrixArrayCoords&) = 0;
-    virtual void Read(PlaneF&) = 0;
+    virtual ~IReadStream() = default;
+
+    // Abstract Read function for raw data
+    virtual void Read(void* data, size_t size) = 0;
+
+    // Template Read function for generic types
+    template<typename T>
+    void Read(T& var)
+    {
+        Read(static_cast<void*>(&var), sizeof(T));
+    }
+
+    // Overload for std::string
+    virtual void Read(std::string& str) = 0;
 };
 
 
 struct IWriteStream
 {
-    virtual void Write( const bool& ) = 0;
-    virtual void Write(const char&) = 0;
-    virtual void Write(const short&) = 0;
-    virtual void Write(const int&) = 0;
-    virtual void Write(const long&) = 0;
-    virtual void Write(const float&) = 0;
-    virtual void Write(const double&) = 0;
-    virtual void Write(const size_t&) = 0;
-    virtual void Write(const unsigned short&) = 0;
-    virtual void Write(const GPSLocation &) = 0;
-    virtual void Write(const std::string&) = 0;
-    virtual void Write(const Vector3F&) = 0;
-    virtual void Write(const Vector4F&) = 0;
-    virtual void Write(const Vector3D&) = 0;
-    virtual void Write(const Vector2D&) = 0;
-    virtual void Write(const Vector2F&) = 0;
-    virtual void Write(const Matrix3x3F&) = 0;
-    virtual void Write(const Matrix3x3D&) = 0;
-    virtual void Write(const Matrix4x4F&) = 0;
-    virtual void Write(const Matrix4x4D&) = 0;
-    virtual void Write(const QuarternionF&) = 0;
-    virtual void Write(const QuarternionD&) = 0;
-    virtual void Write(const BoundingBox&) = 0;
-    virtual void Write(const MatrixArrayCoords&) = 0;
-    virtual void Write(const PlaneF&) = 0;
+    virtual ~IWriteStream() = default;
+
+    // Abstract Write function with void* to handle any type
+    virtual void Write(const void* data, size_t size) = 0;
+
+    // Template Write for general types
+    template<typename T>
+    void Write(const T& var)
+    {
+        Write(static_cast<const void*>(&var), sizeof(T));
+    }
+
+    // Overload specifically for std::string
+    virtual void Write(const std::string& str) = 0;
 };
 
 
