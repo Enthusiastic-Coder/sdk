@@ -21,8 +21,8 @@ protected:
     virtual void Write(const std::string& str) override
     {
         size_t length( str.length() );
-        _os.write((const char*)&length, sizeof(length));
-        _os.write((const char*)str.c_str(), length);
+        Write(&length, sizeof(length));
+        Write(str.c_str(), length);
     }
 
 private:
@@ -45,11 +45,12 @@ protected:
     void Read(std::string& str) override
     {
         size_t length;
-        _is.read((char*)&length, sizeof(length));
+        Read(&length, sizeof(length));
+
         if( length )
         {
             str.resize( length );
-            _is.read((char*)&*str.begin(), length);
+            Read(&*str.begin(), length);
         }
     }
 
