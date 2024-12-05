@@ -40,7 +40,7 @@ public:
         _tiles[index].push_back(item);
     }
 
-    void setViewBoundary(const GPSLocation& tL, const GPSLocation& bR) const
+    void setViewBoundary(const GPSLocation& tL, const GPSLocation& bR)
     {
         _viewableTiles.clear();
         GPSBoundary b(tL, bR);
@@ -114,7 +114,7 @@ private:
     int _divisions;
 
     std::map<int,std::vector<T>> _tiles;
-    mutable std::vector<int> _viewableTiles;
+    std::vector<int> _viewableTiles;
 };
 
 #endif // GPSTILECONTAINER_H
