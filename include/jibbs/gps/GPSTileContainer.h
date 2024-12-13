@@ -19,16 +19,13 @@ public:
 
         _cellWidth = (bottomRight._lng - topLeft._lng)/divisions;
         _cellHeight = (bottomRight._lat - topLeft._lat)/divisions;
+
+        initializeTileBoundaries();
     }
 
     const std::vector<T>& getTile(const GPSLocation& pt) const
     {
         return _tiles[GPSToTileIndex(pt)];
-    }
-
-    const std::map<int,std::vector<T>>& getTiles() const
-    {
-        return _tiles;
     }
 
     void add(const T& item, const GPSLocation& pos)
@@ -45,10 +42,31 @@ public:
         _viewableTiles.clear();
         GPSBoundary b(tL, bR);
 
-        for( const auto& item : _tiles )
+        // Compute the range of tile indices based on GPS boundaries
+        int minX = std::floor((tL._lng - _boundary.topLeft()._lng) / _cellWidth);
+        int maxX = std::floor((bR._lng - _boundary.topLeft()._lng) / _cellWidth);
+        int minY = std::floor((tL._lat - _boundary.topLeft()._lat) / _cellHeight);
+        int maxY = std::floor((bR._lat - _boundary.topLeft()._lat) / _cellHeight);
+
+        // Clamp the range to valid indices
+        minX = std::max(0, minX);
+        maxX = std::min(_divisions - 1, maxX);
+        minY = std::max(0, minY);
+        maxY = std::min(_divisions - 1, maxY);
+
+        // Iterate over the relevant range and check if the tile exists in the map
+        for (int y = minY; y <= maxY; ++y)
         {
-            if(b.intersects(boundaryFromIndex(item.first)))
-                _viewableTiles.push_back(item.first);
+            for (int x = minX; x <= maxX; ++x)
+            {
+                int tileIndex = y * _divisions + x; // Convert (x, y) to tile index
+                auto it = _tiles.find(tileIndex);  // Check if the tile exists
+
+                if (_tiles.find(tileIndex) != _tiles.end() && b.intersects(_tileBoundaries[tileIndex]))
+                {
+                    _viewableTiles.push_back(tileIndex);
+                }
+            }
         }
     }
 
@@ -107,7 +125,17 @@ protected:
         return {tL, bR};
     }
 
+    void initializeTileBoundaries()
+    {
+        _tileBoundaries.resize(_divisions * _divisions);
+        for (int i = 0; i < _divisions * _divisions; ++i)
+        {
+            _tileBoundaries[i] = boundaryFromIndex(i); // Use the simplified function here
+        }
+    }
+
 private:
+    std::vector<GPSBoundary> _tileBoundaries;
     GPSBoundary _boundary;
     double _cellWidth;
     double _cellHeight;
