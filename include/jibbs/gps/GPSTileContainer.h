@@ -3,7 +3,7 @@
 
 #include <QString>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 #include "GPSBoundary.h"
 #include "GPSLocation.h"
@@ -20,17 +20,17 @@ public:
         _cellWidth = (bottomRight._lng - topLeft._lng)/divisions;
         _cellHeight = (bottomRight._lat - topLeft._lat)/divisions;
 
-        initializeTileBoundaries();
-    }
+        _tileBoundaries.resize(_divisions * _divisions);
 
-    const std::vector<T>& getTile(const GPSLocation& pt) const
-    {
-        return _tiles[GPSToTileIndex(pt)];
+        for (int i = 0; i < _divisions * _divisions; ++i)
+        {
+            _tileBoundaries[i] = getBoundaryFromIndex(i); // Use the simplified function here
+        }
     }
 
     void add(const T& item, const GPSLocation& pos)
     {
-        int index = GPSToTileIndex(pos);
+        int index = getIndexFromGPS(pos);
         if( index < 0 || index >= _divisions*_divisions)
             return;
 
@@ -39,21 +39,14 @@ public:
 
     void setViewBoundary(const GPSLocation& tL, const GPSLocation& bR)
     {
-        _viewableTiles.clear();
+        // Compute the range of tile indices based on GPS boundaries
+        int minX, maxX, minY, maxY;
+
         GPSBoundary b(tL, bR);
 
-        // Compute the range of tile indices based on GPS boundaries
-        int minX = std::floor((tL._lng - _boundary.topLeft()._lng) / _cellWidth);
-        int maxX = std::floor((bR._lng - _boundary.topLeft()._lng) / _cellWidth);
-        int minY = std::floor((tL._lat - _boundary.topLeft()._lat) / _cellHeight);
-        int maxY = std::floor((bR._lat - _boundary.topLeft()._lat) / _cellHeight);
+        getIndexBoundsFromGPSBounds(b, minX, maxX, minY, maxY);
 
-        // Clamp the range to valid indices
-        minX = std::max(0, minX);
-        maxX = std::min(_divisions - 1, maxX);
-        minY = std::max(0, minY);
-        maxY = std::min(_divisions - 1, maxY);
-
+        _viewableTiles.clear();
         // Iterate over the relevant range and check if the tile exists in the map
         for (int y = minY; y <= maxY; ++y)
         {
@@ -75,6 +68,11 @@ public:
         return _viewableTiles;
     }
 
+    const std::vector<T>& getTile(const GPSLocation& pt) const
+    {
+        return getTile(getIndexFromGPS(pt));
+    }
+
     const std::vector<T>& getTile(int idx) const
     {
         auto it = _tiles.find(idx);
@@ -88,8 +86,42 @@ public:
         return it->second;
     }
 
-protected:
-    int GPSToTileIndex(const GPSLocation& pos) const
+    void getIndexBoundsFromGPSBounds(const GPSBoundary& b, int& minX, int &maxX, int &minY, int &maxY)
+    {
+        // Compute the range of tile indices based on GPS boundaries
+        minX = std::floor((b.topLeft()._lng - _boundary.topLeft()._lng) / _cellWidth);
+        maxX = std::floor((b.bottomRight()._lng - _boundary.topLeft()._lng) / _cellWidth);
+
+        minY = std::floor((b.topLeft()._lat - _boundary.topLeft()._lat) / _cellHeight);
+        maxY = std::floor((b.bottomRight()._lat - _boundary.topLeft()._lat) / _cellHeight);
+
+        // Clamp the range to valid indices
+        minX = std::max(0, minX);
+        maxX = std::min(_divisions - 1, maxX);
+        minY = std::max(0, minY);
+        maxY = std::min(_divisions - 1, maxY);
+    }
+
+    GPSBoundary getBoundaryFromIndex(int index) const
+    {
+        int x = index % _divisions;
+        int y = index/ _divisions;
+
+        int x2 = (index+1) % _divisions;
+        int y2 = (index+ _divisions +1) / _divisions;
+
+        GPSLocation tL;
+        tL._lng = _boundary.topLeft()._lng + _cellWidth * x;
+        tL._lat = _boundary.topLeft()._lat + _cellHeight * y;
+
+        GPSLocation bR;
+        bR._lng = _boundary.topLeft()._lng + _cellWidth * x2;
+        bR._lat = _boundary.topLeft()._lat + _cellHeight * y2;
+
+        return {tL, bR};
+    }
+
+    int getIndexFromGPS(const GPSLocation& pos) const
     {
         double dW = pos._lng - _boundary.topLeft()._lng;
         double dH = pos._lat - _boundary.topLeft()._lat;
@@ -106,34 +138,6 @@ protected:
         return cellY * _divisions + cellX;
     }
 
-    GPSBoundary boundaryFromIndex(int i) const
-    {
-        int x = i % _divisions;
-        int y = i/ _divisions;
-
-        int x2 = (i+1) % _divisions;
-        int y2 = (i+ _divisions +1) / _divisions;
-
-        GPSLocation tL;
-        tL._lng = _boundary.topLeft()._lng + _cellWidth * x;
-        tL._lat = _boundary.topLeft()._lat + _cellHeight * y;
-
-        GPSLocation bR;
-        bR._lng = _boundary.topLeft()._lng + _cellWidth * x2;
-        bR._lat = _boundary.topLeft()._lat + _cellHeight * y2;
-
-        return {tL, bR};
-    }
-
-    void initializeTileBoundaries()
-    {
-        _tileBoundaries.resize(_divisions * _divisions);
-        for (int i = 0; i < _divisions * _divisions; ++i)
-        {
-            _tileBoundaries[i] = boundaryFromIndex(i); // Use the simplified function here
-        }
-    }
-
 private:
     std::vector<GPSBoundary> _tileBoundaries;
     GPSBoundary _boundary;
@@ -141,7 +145,7 @@ private:
     double _cellHeight;
     int _divisions;
 
-    std::map<int,std::vector<T>> _tiles;
+    std::unordered_map<int,std::vector<T>> _tiles;
     std::vector<int> _viewableTiles;
 };
 
