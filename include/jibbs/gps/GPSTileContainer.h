@@ -37,8 +37,9 @@ public:
         _tiles[index].push_back(item);
     }
 
-    void setViewBoundary(const GPSLocation& tL, const GPSLocation& bR)
+    std::vector<int> getViewableTiles(const GPSLocation& tL, const GPSLocation& bR)
     {
+        std::vector<int> viewables;
         // Compute the range of tile indices based on GPS boundaries
         int minX, maxX, minY, maxY;
 
@@ -46,7 +47,6 @@ public:
 
         getIndexBoundsFromGPSBounds(b, minX, maxX, minY, maxY);
 
-        _viewableTiles.clear();
         // Iterate over the relevant range and check if the tile exists in the map
         for (int y = minY; y <= maxY; ++y)
         {
@@ -57,10 +57,17 @@ public:
 
                 if (_tiles.find(tileIndex) != _tiles.end() && b.intersects(_tileBoundaries[tileIndex]))
                 {
-                    _viewableTiles.push_back(tileIndex);
+                    viewables.push_back(tileIndex);
                 }
             }
         }
+
+        return viewables;
+    }
+
+    void setViewBoundary(const GPSLocation& tL, const GPSLocation& bR)
+    {
+        _viewableTiles = getViewableTiles(tL, bR);
     }
 
     const std::vector<int>& getViewableTileIds() const
