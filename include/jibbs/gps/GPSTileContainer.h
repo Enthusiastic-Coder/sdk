@@ -55,7 +55,7 @@ public:
                 int tileIndex = y * _divisions + x; // Convert (x, y) to tile index
                 auto it = _tiles.find(tileIndex);  // Check if the tile exists
 
-                if (_tiles.find(tileIndex) != _tiles.end() && b.intersects(_tileBoundaries[tileIndex]))
+                if (it != _tiles.end() && b.intersects(_tileBoundaries[tileIndex]))
                 {
                     viewables.push_back(tileIndex);
                 }
