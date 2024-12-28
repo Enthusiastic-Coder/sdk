@@ -37,7 +37,7 @@ public:
         _tiles[index].push_back(item);
     }
 
-    std::vector<int> getViewableTiles(const GPSLocation& tL, const GPSLocation& bR)
+    std::vector<int> getViewableTiles(const GPSLocation& tL, const GPSLocation& bR) const
     {
         std::vector<int> viewables;
         // Compute the range of tile indices based on GPS boundaries
@@ -93,7 +93,7 @@ public:
         return it->second;
     }
 
-    void getIndexBoundsFromGPSBounds(const GPSBoundary& b, int& minX, int &maxX, int &minY, int &maxY)
+    void getIndexBoundsFromGPSBounds(const GPSBoundary& b, int& minX, int &maxX, int &minY, int &maxY) const
     {
         // Compute the range of tile indices based on GPS boundaries
         minX = std::floor((b.topLeft()._lng - _boundary.topLeft()._lng) / _cellWidth);
