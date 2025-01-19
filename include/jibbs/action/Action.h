@@ -26,6 +26,7 @@ public:
     bool isVisible() const;
     bool isDisabled() const;
 
+    void pulse();
     void toggle();
     QString text() const;
     QVariant data() const;

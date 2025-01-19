@@ -96,16 +96,11 @@ void Action::trigger()
         _group->trigger(this);
 }
 
-void Action::setChecked(bool v)
+void Action::pulse()
 {
-    if( _isChecked == v)
-        return;
-
-    _isChecked = v;
-
     if( _group == nullptr)
     {
-        emit toggled(v);
+        emit toggled(_isChecked);
     }
     else
     {
@@ -115,8 +110,18 @@ void Action::setChecked(bool v)
         {
             Action* a = var.value<Action*>();
 
-            a->_isChecked = a != this?false:v;
+            a->_isChecked = a != this?false:_isChecked;
             emit a->toggled(a->_isChecked);
         }
     }
+}
+
+void Action::setChecked(bool v)
+{
+    if( _isChecked == v)
+        return;
+
+    _isChecked = v;
+
+    pulse();
 }
