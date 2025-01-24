@@ -6,8 +6,18 @@ ActionGroup::ActionGroup(QObject *parent) : QObject(parent)
 
 void ActionGroup::addAction(Action *a)
 {
-    _actions.append(QVariant::fromValue(a));
     a->setGroup(this);
+    _actions.append(QVariant::fromValue(a));
+
+    emit actionsChanged();
+    emit lengthChanged();
+}
+
+void ActionGroup::removeAction(Action *a)
+{
+    a->setGroup(nullptr);
+    _actions.removeOne(QVariant::fromValue(a));
+
     emit actionsChanged();
     emit lengthChanged();
 }

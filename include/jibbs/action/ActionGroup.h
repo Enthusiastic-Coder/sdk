@@ -15,6 +15,7 @@ public:
     explicit ActionGroup(QObject *parent = nullptr);
 
     void addAction(Action* a);
+    void removeAction(Action* a);
     Action* checkedAction() const;
     QVariantList actions();
     void setTitle(const QString& );
@@ -27,7 +28,8 @@ signals:
     void actionsChanged();
     void lengthChanged();
 
-public slots:
+private:
+    friend class Action;
     void trigger(Action *a);
 
 private:
