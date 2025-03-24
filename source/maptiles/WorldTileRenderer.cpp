@@ -179,6 +179,11 @@ void WorldTileRenderer::BuildGroundTile(int tileWidth, int tileHeight)
 
 void WorldTileRenderer::render(float compassValue)
 {
+    render(compassValue, QPointF(_width/2.0f, _height/2.0f));
+}
+
+void WorldTileRenderer::render(float compassValue, QPointF mid)
+{
     if( !_enabled)
         return;
 
@@ -190,9 +195,9 @@ void WorldTileRenderer::render(float compassValue)
     pipeline.Push();
     pipeline.GetModel().LoadIdentity();
     pipeline.GetView().LoadIdentity();
-    pipeline.GetView().Translate(-_width/2, -_height/2,0);
+    pipeline.GetView().Translate(-mid.x(), -mid.y(),0);
     pipeline.GetView().Rotate(0,0,-compassValue);
-    pipeline.GetView().Translate(_width/2, _height/2,0);
+    pipeline.GetView().Translate(mid.x(), mid.y(),0);
     pipeline.GetProjection().LoadIdentity();
     pipeline.GetProjection().SetOrthographic(0, _width, _height, 0, -1, 1);
 

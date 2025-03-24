@@ -55,6 +55,7 @@ public:
     void setEnabled(bool enabled);
 
     void releaseAllTextures();
+    void render(float compassValue, QPointF mid);
     void render(float compassValue);
     void setSea(QColor c);
     void setGround(QColor c);
