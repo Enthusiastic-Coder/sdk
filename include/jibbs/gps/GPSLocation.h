@@ -124,6 +124,15 @@ public:
         return 6371000.0;
     }
 
+    GPSLocation interpolateTo(const GPSLocation& target, float t) const
+    {
+        return {
+            _lat + (target._lat - _lat) * t,
+            _lng + (target._lng - _lng) * t,
+            _height + (target._height - _height) * t  // if applicable
+        };
+    }
+
     Vector3D makeEuler() const
     {
         return Vector3D( -(90-_lat), -_lng, 0);
