@@ -133,6 +133,10 @@ public:
         };
     }
 
+    inline GPSLocation operator-() const {
+        return GPSLocation{ -_lat, -_lng }; // add _alt if needed
+    }
+
     Vector3D makeEuler() const
     {
         return Vector3D( -(90-_lat), -_lng, 0);
