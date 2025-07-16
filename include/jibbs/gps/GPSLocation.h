@@ -420,3 +420,11 @@ public:
         return true;
     }
 };
+
+inline GPSLocation operator*(float scalar, const GPSLocation& loc) {
+    return GPSLocation {
+        scalar * loc._lat,
+        scalar * loc._lng,
+        scalar * loc._height // if alt exists
+    };
+}
