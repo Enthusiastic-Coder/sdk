@@ -1,6 +1,7 @@
 #include <jibbs/mesh/SubScene.h>
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
+#include <algorithm>
 
 SubScene::SubScene(std::string name, std::shared_ptr<std::vector<vertexData>>& vd, std::shared_ptr<std::vector<unsigned short>>& id, QString tex)
 {
@@ -13,6 +14,21 @@ SubScene::SubScene(std::string name, std::shared_ptr<std::vector<vertexData>>& v
     {
         _strobeLetter = name[6];
         _isStrobeOffset = name[7] =='O';
+        if (vd && !vd->empty())
+        {
+            Vector3F low = vd->front().position;
+            Vector3F high = low;
+            for (const auto& vertex : *vd)
+            {
+                low.x = std::min(low.x, vertex.position.x);
+                low.y = std::min(low.y, vertex.position.y);
+                low.z = std::min(low.z, vertex.position.z);
+                high.x = std::max(high.x, vertex.position.x);
+                high.y = std::max(high.y, vertex.position.y);
+                high.z = std::max(high.z, vertex.position.z);
+            }
+            _strobeCenter = (low + high) * 0.5f;
+        }
     }
 
     _texFilename = tex;

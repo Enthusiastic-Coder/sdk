@@ -29,6 +29,7 @@ public:
     bool isStrobeR() const;
     bool isStrobeO() const;
     bool isStrobeB() const;
+    const Vector3F& strobeCenter() const { return _strobeCenter; }
     QString texFilename() const;
 
     bool hasPivot() const;
@@ -47,6 +48,7 @@ private:
     bool _isStrobe = false;
     bool _isStrobeOffset = false;
     char _strobeLetter;
+    Vector3F _strobeCenter = {0, 0, 0};
     std::function<void(OpenGLMatrixStack& mat, pivotData&)> _pivot = nullptr;
     std::shared_ptr<std::vector<vertexData>> _vd;
     std::shared_ptr<std::vector<unsigned short>> _id;
