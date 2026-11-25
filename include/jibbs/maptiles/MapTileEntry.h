@@ -45,11 +45,11 @@ private:
     QString _url;
     QString _url2;
 
-    bool _showRunway;
-    bool _smoothedTexture;
-    bool _showZoom12;
-    bool _showZoom13;
-    bool _showZoom14;
+    bool _showRunway = true;
+    bool _smoothedTexture = true;
+    bool _showZoom12 = true;
+    bool _showZoom13 = true;
+    bool _showZoom14 = true;
 
     QString _user;
     QString _password;

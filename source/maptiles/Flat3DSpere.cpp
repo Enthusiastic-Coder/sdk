@@ -13,6 +13,12 @@
 #include <QSettings>
 #include <QAuthenticator>
 #include <QCoreApplication>
+#include <QDateTime>
+
+namespace {
+constexpr int tileRequestIntervalMs = 350;
+constexpr int maxConcurrentTileRequests = 3;
+}
 
 Flat3DSphere::Flat3DSphere()
 {
@@ -23,9 +29,18 @@ Flat3DSphere::Flat3DSphere()
     connect(_networkAccessManager, &QNetworkAccessManager::finished, this, [this](QNetworkReply* reply)
             {
                 reply->deleteLater();
-#ifdef Q_OS_WIN
-                qDebug() << QTime::currentTime() << " - " << reply->url();
-#endif
+                --_downloadsInFlight;
+
+                if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 429)
+                {
+                    const QByteArray retryAfter = reply->rawHeader("Retry-After");
+                    bool secondsOk = false;
+                    const auto seconds = retryAfter.toInt(&secondsOk);
+                    const auto until = QDateTime::fromString(QString::fromLatin1(retryAfter), Qt::RFC2822Date);
+                    const qint64 delay = secondsOk ? qint64(seconds) * 1000
+                        : QDateTime::currentDateTimeUtc().msecsTo(until);
+                    _serverCooldown.setRemainingTime(std::max({qint64(30000), delay, _serverCooldown.remainingTime()}));
+                }
 
                 QNetworkReply::NetworkError nError = reply->error();
 
@@ -37,12 +52,15 @@ Flat3DSphere::Flat3DSphere()
 
                 const int index = reply->request().attribute(static_cast<QNetworkRequest::Attribute>(QNetworkRequest::User+1)).toInt();
 
-                if( index >= it->second.items.size())
+                if (index < 0 || index >= static_cast<int>(it->second.items.size()))
                     return;
 
-                it->second.dirty = true;
-
                 TileRetrieve::Item& item = it->second.items[index];
+                if (item.reply != reply)
+                    return;
+
+                item.reply.clear();
+                it->second.dirty = true;
 
                 if( nError == QNetworkReply::NoError)
                 {
@@ -61,7 +79,7 @@ Flat3DSphere::Flat3DSphere()
                 else
                 {
                     item.downloadState = TileRetrieve::downloadState::failed;
-                    qDebug() << Q_FUNC_INFO << "-" << reply->errorString();
+                    item.retryAfter.setRemainingTime(1000 * (1 << item.attempts));
                 }
             });
 
@@ -76,6 +94,11 @@ Flat3DSphere::Flat3DSphere()
     _timer->setSingleShot(true);
 
     connect(_timer, &QTimer::timeout, this, &Flat3DSphere::removeUnusedTextures, Qt::QueuedConnection);
+
+    _downloadTimer = new QTimer(this);
+    _downloadTimer->setTimerType(Qt::PreciseTimer);
+    _downloadTimer->setInterval(tileRequestIntervalMs);
+    connect(_downloadTimer, &QTimer::timeout, this, &Flat3DSphere::startNextTileDownload);
 
     _renderer.reset(new Renderer);
 
@@ -95,8 +118,14 @@ Flat3DSphere::Flat3DSphere()
     updateTexture();
 }
 
-void Flat3DSphere::render(const GPSLocation& g, bool dayLight)
+void Flat3DSphere::render(const GPSLocation& g, bool dayLight, float tileFocalPixels)
 {
+    if (_tileMapActive && _tileFocalPixels != tileFocalPixels)
+    {
+        _tileFocalPixels = tileFocalPixels;
+        _bDirty = true;
+    }
+
     if(_bDirty)
     {
         _bDirty = false;
@@ -121,6 +150,12 @@ void Flat3DSphere::setDirty()
 void Flat3DSphere::setCamera(EulerF cam)
 {
     _cam = cam;
+    // Compare with the camera used for the last tile build so slow turns also refresh coverage.
+    if (_tileMapActive
+        && (std::abs(std::remainder(_cam._heading - _lastTileCamera._heading, 360.0f)) >= 2.0f
+            || std::abs(_cam._pitch - _lastTileCamera._pitch) >= 2.0f
+            || (_cam._pitch > 0.0f) != (_lastTileCamera._pitch > 0.0f)))
+        _bDirty = true;
 }
 
 void Flat3DSphere::setTextureMinMag(QOpenGLTexture::Filter minification, QOpenGLTexture::Filter magnification)
@@ -150,6 +185,7 @@ void Flat3DSphere::removeUnusedTextures()
             continue;
         }
 
+        discardPendingTile(it->first);
         it = _tiles.erase(it);
         _timer->start(50);
         numDeleted++;
@@ -181,11 +217,12 @@ void Flat3DSphere::consumeUnrealisedTextures()
 
     std::vector<QString> toDelete;
 
+    int texturesUploaded = 0;
     for( auto& item: _unrealisedTextures)
     {
         auto it = _tiles.find(item.first);
 
-        if( it == _tiles.end())
+        if (it == _tiles.end() || !it->second.bRequired)
             continue;
 
         TileRetrieve& tr = item.second;
@@ -193,9 +230,11 @@ void Flat3DSphere::consumeUnrealisedTextures()
         if( !tr.dirty)
             continue;
 
-        tr.dirty = false;
-
         const TileRetrieve::downloadState state = tr.status();
+        if (state == TileRetrieve::downloadState::downloaded && !tr.showZoom && texturesUploaded >= 6)
+            continue;
+
+        tr.dirty = false;
 
         if( state == TileRetrieve::downloadState::downloaded)
         {
@@ -204,7 +243,11 @@ void Flat3DSphere::consumeUnrealisedTextures()
             if( tr.showZoom)
                 it->second.tex = _textureCacheManager.getTexture(tr.getImage());
             else
-                it->second.tex = std::make_shared<QOpenGLTexture>(tr.getImage());
+            {
+                it->second.tex = std::make_shared<QOpenGLTexture>(tr.getImage(), _tileMapActive
+                    ? QOpenGLTexture::DontGenerateMipMaps : QOpenGLTexture::GenerateMipMaps);
+                ++texturesUploaded;
+            }
         }
 
         else if( state == TileRetrieve::downloadState::downloadedUnavailable)
@@ -227,17 +270,77 @@ void Flat3DSphere::consumeUnrealisedTextures()
         _unrealisedTextures.erase(id);
 }
 
-void Flat3DSphere::downloadTile(const QString& finalURL, const QString& tileId, int idx )
+void Flat3DSphere::queueTileDownload(const QString& tileId, int idx)
 {
-    QUrl url(finalURL);
-    QNetworkRequest request(url);
+    auto& tile = _unrealisedTextures.at(tileId);
+    tile.items[idx].downloadState = TileRetrieve::downloadState::queued;
+    auto& queue = tile.level == 0 ? _baseDownloads : _detailDownloads;
+    queue.emplace_back(tileId, idx);
+    if (!_downloadTimer->isActive())
+        _downloadTimer->start();
+}
+
+void Flat3DSphere::startNextTileDownload()
+{
+    if (_downloadsInFlight >= maxConcurrentTileRequests || !_serverCooldown.hasExpired())
+        return;
+
+    for (auto* queue : {&_baseDownloads, &_detailDownloads})
+    {
+        while (!queue->empty())
+        {
+            const auto [tileId, index] = std::move(queue->front());
+            queue->pop_front();
+            const auto tile = _tiles.find(tileId);
+            const auto pending = _unrealisedTextures.find(tileId);
+            if (tile == _tiles.end() || pending == _unrealisedTextures.end())
+                continue;
+
+            auto& item = pending->second.items[index];
+            if (!tile->second.bRequired)
+            {
+                item.downloadState = TileRetrieve::downloadState::none;
+                continue;
+            }
+
+            downloadTile(tileId, index);
+            return;
+        }
+    }
+    _downloadTimer->stop();
+}
+
+void Flat3DSphere::downloadTile(const QString& tileId, int idx)
+{
+    auto& item = _unrealisedTextures.at(tileId).items[idx];
+    QNetworkRequest request{QUrl(item.tileUrl)};
     // Set a user-agent header
     request.setHeader(QNetworkRequest::UserAgentHeader, _userInfo);
     request.setAttribute(QNetworkRequest::User, tileId);
     request.setAttribute(static_cast<QNetworkRequest::Attribute>(QNetworkRequest::User+1), idx);
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
-    _networkAccessManager->get(request);
-};
+    request.setTransferTimeout(15000);
+    item.downloadState = TileRetrieve::downloadState::downloading;
+    ++item.attempts;
+    ++_downloadsInFlight;
+    item.reply = _networkAccessManager->get(request);
+}
+
+void Flat3DSphere::discardPendingTile(const QString& tileId)
+{
+    auto pending = _unrealisedTextures.extract(tileId);
+    if (pending.empty())
+        return;
+
+    for (auto* queue : {&_baseDownloads, &_detailDownloads})
+        queue->erase(std::remove_if(queue->begin(), queue->end(), [&tileId](const TileDownload& job) {
+            return job.first == tileId;
+        }), queue->end());
+
+    for (const auto& item : pending.mapped().items)
+        if (item.reply)
+            item.reply->abort();
+}
 
 bool Flat3DSphere::retryTile(int zoom, int tileX, int tileY)
 {
@@ -255,10 +358,11 @@ bool Flat3DSphere::retryTile(int zoom, int tileX, int tileY)
         {
             TileRetrieve::Item& item = tr.items[i];
 
-            if( item.downloadState == TileRetrieve::downloadState::failed)
+            if ((item.downloadState == TileRetrieve::downloadState::none
+                 || item.downloadState == TileRetrieve::downloadState::failed)
+                && item.attempts < 3 && item.retryAfter.hasExpired())
             {
-                item.downloadState = TileRetrieve::downloadState::downloading;
-                downloadTile(item.tileUrl, tileId, static_cast<int>(i));
+                queueTileDownload(tileId, static_cast<int>(i));
                 downloadHappened = true;
             }
         }
@@ -284,9 +388,7 @@ void Flat3DSphere::requestTile(int zoom, int tileX, int tileY)
 
         TileRetrieve::Item item;
         item.tileUrl = finalURL;
-        item.downloadState = TileRetrieve::downloadState::downloading;
         tr.items.push_back(item);
-        downloadTile(finalURL, tileId, static_cast<int>(tr.items.size()-1));
     }
 
     if( tr.items.empty())
@@ -297,7 +399,12 @@ void Flat3DSphere::requestTile(int zoom, int tileX, int tileY)
         tr.items.push_back(item);
     }
 
-    _unrealisedTextures[tileId] = tr;
+    const auto count = static_cast<int>(tr.items.size());
+    const bool hasUrls = !tr.items.front().tileUrl.isEmpty();
+    _unrealisedTextures[tileId] = std::move(tr);
+    if (hasUrls)
+        for (int i = 0; i < count; ++i)
+            queueTileDownload(tileId, i);
 }
 
 void Flat3DSphere::requestZoomTile(int zoom, const QString& tileId, QColor color)
@@ -316,10 +423,11 @@ void Flat3DSphere::BuildOpenStreetMapTile(const GPSLocation &g)
     qDebug() << Q_FUNC_INFO;
 #endif
     releaseAllTextures();
+    _lastTileCamera = _cam;
 
-    const float pitch = std::max(2.0f, fabs(_cam._pitch));
-
-    const float radius = g._height / tan( DegreesToRadians(pitch * 1.2));
+    const float pitch = std::clamp(std::abs(_cam._pitch) * 1.2f, 2.4f, 89.9f);
+    const float altitude = std::max(0.0f, g._height);
+    const float radius = altitude / std::tan(DegreesToRadians(pitch));
     const QuarternionF& qHdg = QHDG(static_cast<int>(_cam._heading));
     const Vector3F pos = QVRotate( qHdg, Vector3F(0,0,-radius));
     const GPSLocation gps = g + pos;
@@ -334,19 +442,27 @@ void Flat3DSphere::BuildOpenStreetMapTile(const GPSLocation &g)
     std::map<int, TileData> tileLayers;
 
 
-    const int diffZ = 5;
-    int zHeight = diffZ;
+    const float distance = std::max(1.0f, std::hypot(altitude, radius));
+    const double detailLatitude = std::clamp(gps._lat, -85.0511, 85.0511);
+    constexpr double earthCircumferenceMeters = 40075016.69;
+    constexpr double minTileScreenPixels = 112.0;
+    const double worldPixels = earthCircumferenceMeters * std::cos(DegreesToRadians(detailLatitude))
+        * _tileFocalPixels / distance;
 
-    if( isZoomVisible(14))
-        tileLayers[14] = {Qt::darkYellow, 1, 1, zHeight -=diffZ};
-
-    if( isZoomVisible(13))
-        tileLayers[13] = {Qt::darkGreen, 1, 1, zHeight -=diffZ};
-
-    if( isZoomVisible(12))
-        tileLayers[12] = {Qt::darkCyan, 1, 1, zHeight -=diffZ};
-
-    tileLayers[10] = {Qt::darkBlue, 3, 3, zHeight -=diffZ};
+    // Only the finest useful layer is requested over the base. Debug view still shows every enabled layer.
+    const bool showAll = _tileMapShowZoom || _tileFocalPixels <= 0.0f;
+    const auto addDetail = [&](int zoom, QColor color, int offset) {
+        if (!isZoomVisible(zoom))
+            return;
+        const double threshold = zoom == _lastDetailZoom ? 96.0 : minTileScreenPixels;
+        if (showAll || (tileLayers.empty() && _cam._pitch > 0.0f && worldPixels / (1 << zoom) >= threshold))
+            tileLayers[zoom] = {color, 1, 1, offset};
+    };
+    addDetail(14, Qt::darkYellow, 0);
+    addDetail(13, Qt::darkGreen, -5);
+    addDetail(12, Qt::darkCyan, -10);
+    _lastDetailZoom = !showAll && !tileLayers.empty() ? tileLayers.begin()->first : 0;
+    tileLayers[10] = {Qt::darkBlue, 3, 3, -15};
 
 
     const int depthFactor = g._height /1000 + 1.0f;
@@ -442,17 +558,9 @@ void Flat3DSphere::BuildOpenStreetMapTile(const GPSLocation &g)
                 }
                 else
                 {
-                    if( tL._lng < boundary0.first._lng)
-                        return;
-
-                    if( tL._lat > boundary0.first._lat)
-                        return;
-
-                    if( bR._lng > boundary0.second._lng)
-                        return;
-
-                    if( bR._lat < boundary0.second._lat)
-                        return;
+                    if (tL._lng < boundary0.first._lng || tL._lat > boundary0.first._lat
+                        || bR._lng > boundary0.second._lng || bR._lat < boundary0.second._lat)
+                        continue;
                 }
 
                 const QString tileId = getTileId(zoom, tileX, tileY);
@@ -676,6 +784,9 @@ void Flat3DSphere::renderMap(float fHeight)
     _renderer->progId().sendUniform("Color", _mod.r, _mod.g, _mod.b, _mod.a);
     _renderer->progId().sendUniform("texture0", 0);
 
+    _defaultTextureBuffer.bind();
+    _renderer->bindVertex(Renderer::TexCoord, 2);
+
     for(auto&item:_tiles)
     {
         Tile& t = item.second;
@@ -689,9 +800,6 @@ void Flat3DSphere::renderMap(float fHeight)
         t.bindVertex();
         _renderer->bindVertex(Renderer::Vertex, 3);
 
-        _defaultTextureBuffer.bind();
-        _renderer->bindVertex(Renderer::TexCoord, 2);
-
         _renderer->bindTexture(t.tex->textureId());
 
         _renderer->drawArrays(GL_TRIANGLES, t.getVertices().vertexSize());
@@ -704,7 +812,12 @@ void Flat3DSphere::renderMap(float fHeight)
 void Flat3DSphere::resetTiles()
 {
     _tiles.clear();
-    _unrealisedTextures.clear();
+    _lastDetailZoom = 0;
+    _downloadTimer->stop();
+    _baseDownloads.clear();
+    _detailDownloads.clear();
+    while (!_unrealisedTextures.empty())
+        discardPendingTile(_unrealisedTextures.begin()->first);
     _bDirty = true;
 }
 
@@ -794,6 +907,22 @@ void Flat3DSphere::setTileMapPassword(QString password)
     _tileMapPassword = password;
 }
 
+void Flat3DSphere::setTileSource(QStringList urls, const QString& user, const QString& password)
+{
+    for (auto& url : urls)
+        url = url.trimmed();
+    const std::vector<QString> source(urls.cbegin(), urls.cend());
+    if (_tileMapURLs == source && _tileMapUser == user && _tileMapPassword == password)
+        return;
+
+    resetTiles();
+    _networkAccessManager->clearAccessCache();
+    _tileMapURLs = source;
+    _tileMapUser = user;
+    _tileMapPassword = password;
+    _tileMapHost = urls.isEmpty() ? QString() : QUrl(urls.front()).host();
+}
+
 bool Flat3DSphere::isZoomVisible(int zoom) const
 {
     auto it = _zoomVisibility.find(zoom);
@@ -805,6 +934,9 @@ bool Flat3DSphere::isZoomVisible(int zoom) const
 
 void Flat3DSphere::setZoomVisibility(int zoom, bool visible)
 {
+    if (isZoomVisible(zoom) == visible)
+        return;
+
     _zoomVisibility[zoom] = visible;
     _bDirty = true;
 }
@@ -901,7 +1033,7 @@ Flat3DSphere::TileRetrieve::downloadState Flat3DSphere::TileRetrieve::status() c
         if( item.downloadState ==downloadState::failed)
             return downloadState::failed;
 
-        downloading |= item.downloadState == downloadState::downloading;
+        downloading |= item.downloadState == downloadState::downloading || item.downloadState == downloadState::queued;
     }
 
     if( downloading)

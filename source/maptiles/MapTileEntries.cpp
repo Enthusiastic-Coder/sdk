@@ -31,6 +31,8 @@ void MapTileEntries::loadSettings()
 {
     QSettings s;
 
+    for (const auto& entry : std::as_const(_entries))
+        entry.value<MapTileEntry*>()->deleteLater();
     _entries.clear();
 
     s.beginGroup(_settingsPath);
@@ -39,7 +41,7 @@ void MapTileEntries::loadSettings()
 
     for(const auto& group : groups)
     {
-        MapTileEntry* entry = new MapTileEntry;
+        MapTileEntry* entry = new MapTileEntry(this);
         s.beginGroup(group);
         entry->load(s);
         s.endGroup();
@@ -52,11 +54,16 @@ void MapTileEntries::loadSettings()
 
     s.endGroup();
 
+    emit tilesChanged();
     emit tileUpdate();
 }
 
 bool MapTileEntries::add(QString name)
 {
+    name = name.trimmed();
+    if (name.isEmpty() || name.contains('/') || name.contains('\\'))
+        return false;
+
     auto it = _entries.find(name);
     if( it != _entries.end())
         return false;
@@ -79,8 +86,12 @@ bool MapTileEntries::remove(QString name)
     s.remove(name);
     s.endGroup();
 
-    _entries.remove(name);
+    auto* entry = it->value<MapTileEntry*>();
+    _entries.erase(it);
+    if (_activeName == name)
+        setActiveName(QString());
     emit tilesChanged();
+    entry->deleteLater();
     return true;
 }
 

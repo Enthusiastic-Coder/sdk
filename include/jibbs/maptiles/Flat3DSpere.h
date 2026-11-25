@@ -12,11 +12,15 @@
 
 #include <QNetworkAccessManager>
 #include <QNetworkCookieJar>
+#include <QStringList>
 #include <QOpenGLBuffer>
 #include <QOpenGLTexture>
 #include <QTimer>
+#include <QDeadlineTimer>
+#include <QPointer>
 
 #include <memory>
+#include <deque>
 #include <unordered_map>
 
 class Flat3DSphere : public QObject
@@ -27,7 +31,7 @@ public:
 
     void init();
 
-    void render(const GPSLocation &g, bool dayLight);
+    void render(const GPSLocation &g, bool dayLight, float tileFocalPixels = 0.0f);
 
     void setDirty();
     void setCamera(EulerF cam);
@@ -45,6 +49,7 @@ public:
     void setTileShowRunway(bool show);
     void setTileMapUser(QString user);
     void setTileMapPassword(QString password);
+    void setTileSource(QStringList urls, const QString& user, const QString& password);
 
     bool isZoomVisible(int zoom) const;
     void setZoomVisibility(int zoom, bool visible);
@@ -54,7 +59,10 @@ private:
     void requestZoomTile(int zoom, const QString &tileId, QColor color);
     void requestTile(int zoom, int tileX, int tileY);
     bool retryTile(int zoom, int tileX, int tileY);
-    void downloadTile(const QString& finalURL, const QString& tileId, int idx );
+    void queueTileDownload(const QString& tileId, int idx);
+    void startNextTileDownload();
+    void downloadTile(const QString& tileId, int idx);
+    void discardPendingTile(const QString& tileId);
     void BuildOpenStreetMapTile(const GPSLocation &g);
     void BuildGroundTile(const GPSLocation &g);
     void renderTextures(float fHeight, bool dayLight);
@@ -72,6 +80,12 @@ private:
 
     bool _bDirty = false;
     QTimer* _timer =nullptr;
+    QTimer* _downloadTimer = nullptr;
+    using TileDownload = std::pair<QString, int>;
+    std::deque<TileDownload> _baseDownloads;
+    std::deque<TileDownload> _detailDownloads;
+    QDeadlineTimer _serverCooldown;
+    int _downloadsInFlight = 0;
     OpenGLShaderProgram _multTexShader;
     OpenGLShaderProgram _texshader;
     std::unique_ptr<QOpenGLTexture> _texID;
@@ -81,6 +95,9 @@ private:
     QOpenGLTexture::Filter _magnification = QOpenGLTexture::Linear;
     color3 _mod;
     EulerF _cam;
+    EulerF _lastTileCamera;
+    float _tileFocalPixels = 0.0f;
+    int _lastDetailZoom = 0;
 
     QString _strBuildDateTime;
     QString _userInfo;
@@ -119,6 +136,7 @@ private:
     {
         enum class downloadState {
             none,
+            queued,
             downloading,
             failed,
             downloaded,
@@ -129,6 +147,9 @@ private:
             downloadState downloadState = downloadState::none;
             QString tileUrl;
             QImage img;
+            QPointer<QNetworkReply> reply;
+            QDeadlineTimer retryAfter;
+            int attempts = 0;
         };
 
         downloadState status() const;
