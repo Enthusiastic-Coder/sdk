@@ -14,6 +14,7 @@
 #include <QAuthenticator>
 #include <QCoreApplication>
 #include <QDateTime>
+#include <optional>
 
 namespace {
 constexpr int tileRequestIntervalMs = 350;
@@ -274,8 +275,7 @@ void Flat3DSphere::queueTileDownload(const QString& tileId, int idx)
 {
     auto& tile = _unrealisedTextures.at(tileId);
     tile.items[idx].downloadState = TileRetrieve::downloadState::queued;
-    auto& queue = tile.level == 0 ? _baseDownloads : _detailDownloads;
-    queue.emplace_back(tileId, idx);
+    _tileDownloads.emplace_back(tileId, idx);
     if (!_downloadTimer->isActive())
         _downloadTimer->start();
 }
@@ -285,29 +285,32 @@ void Flat3DSphere::startNextTileDownload()
     if (_downloadsInFlight >= maxConcurrentTileRequests || !_serverCooldown.hasExpired())
         return;
 
-    for (auto* queue : {&_baseDownloads, &_detailDownloads})
+    const auto obsolete = std::remove_if(_tileDownloads.begin(), _tileDownloads.end(), [this](const TileDownload& job) {
+        const auto tile = _tiles.find(job.first);
+        const auto pending = _unrealisedTextures.find(job.first);
+        if (tile == _tiles.end() || pending == _unrealisedTextures.end())
+            return true;
+        if (tile->second.bRequired)
+            return false;
+
+        pending->second.items[job.second].downloadState = TileRetrieve::downloadState::none;
+        return true;
+    });
+    _tileDownloads.erase(obsolete, _tileDownloads.end());
+
+    if (_tileDownloads.empty())
     {
-        while (!queue->empty())
-        {
-            const auto [tileId, index] = std::move(queue->front());
-            queue->pop_front();
-            const auto tile = _tiles.find(tileId);
-            const auto pending = _unrealisedTextures.find(tileId);
-            if (tile == _tiles.end() || pending == _unrealisedTextures.end())
-                continue;
-
-            auto& item = pending->second.items[index];
-            if (!tile->second.bRequired)
-            {
-                item.downloadState = TileRetrieve::downloadState::none;
-                continue;
-            }
-
-            downloadTile(tileId, index);
-            return;
-        }
+        _downloadTimer->stop();
+        return;
     }
-    _downloadTimer->stop();
+
+    const auto next = std::min_element(_tileDownloads.cbegin(), _tileDownloads.cend(),
+        [this](const TileDownload& left, const TileDownload& right) {
+            return _tiles.at(left.first).downloadPriority < _tiles.at(right.first).downloadPriority;
+        });
+    const auto [tileId, index] = *next;
+    _tileDownloads.erase(next);
+    downloadTile(tileId, index);
 }
 
 void Flat3DSphere::downloadTile(const QString& tileId, int idx)
@@ -332,10 +335,9 @@ void Flat3DSphere::discardPendingTile(const QString& tileId)
     if (pending.empty())
         return;
 
-    for (auto* queue : {&_baseDownloads, &_detailDownloads})
-        queue->erase(std::remove_if(queue->begin(), queue->end(), [&tileId](const TileDownload& job) {
-            return job.first == tileId;
-        }), queue->end());
+    _tileDownloads.erase(std::remove_if(_tileDownloads.begin(), _tileDownloads.end(), [&tileId](const TileDownload& job) {
+        return job.first == tileId;
+    }), _tileDownloads.end());
 
     for (const auto& item : pending.mapped().items)
         if (item.reply)
@@ -432,6 +434,22 @@ void Flat3DSphere::BuildOpenStreetMapTile(const GPSLocation &g)
     const Vector3F pos = QVRotate( qHdg, Vector3F(0,0,-radius));
     const GPSLocation gps = g + pos;
 
+    // Use the rendered camera to prioritize the ground at the center of the screen.
+    auto& pipeline = OpenGLPipeline::Get(0);
+    const auto clipToWorld = (pipeline.GetProjection().Top() * pipeline.GetView().Top()).Inverse();
+    const auto groundAt = [&](float screenY) -> std::optional<GPSLocation> {
+        const auto ray = clipToWorld * Vector4F(0.0f, screenY, 0.0f, 1.0f);
+        const float horizontal = std::hypot(ray.x, ray.z);
+        if (!std::isfinite(horizontal) || !std::isfinite(ray.y)
+            || ray.y >= -std::max(0.0001f, horizontal * 0.02f))
+            return std::nullopt;
+
+        const float distance = -altitude / ray.y;
+        return g + Vector3F(ray.x * distance, 0.0f, ray.z * distance);
+    };
+    const auto centerGround = groundAt(0.0f);
+    GPSLocation focusGround = groundAt(-0.55f).value_or(g);
+
     struct TileData {
         QColor bgColor;
         int tileCountX;
@@ -526,6 +544,18 @@ void Flat3DSphere::BuildOpenStreetMapTile(const GPSLocation &g)
         }
 
         TileCoordinates centralTile = mapGPSToTile(latitude, longitude, zoom);
+        if (bFirst && centerGround)
+        {
+            const auto centerTile = mapGPSToTile(centerGround->_lat, centerGround->_lng, zoom);
+            if (std::abs(centerTile.x - centralTile.x) <= tileLayer.second.tileCountX
+                && std::abs(centerTile.y - centralTile.y) <= tileLayer.second.tileCountY)
+                focusGround = *centerGround;
+        }
+        const auto focusTile = mapGPSToTile(focusGround._lat, focusGround._lng, zoom);
+        const int focusX = std::clamp(focusTile.x - centralTile.x,
+                                     -tileLayer.second.tileCountX, tileLayer.second.tileCountX);
+        const int focusY = std::clamp(focusTile.y - centralTile.y,
+                                     -tileLayer.second.tileCountY, tileLayer.second.tileCountY);
 
         for( int x=-tileLayer.second.tileCountX; x <=tileLayer.second.tileCountX; ++x)
         {
@@ -564,12 +594,16 @@ void Flat3DSphere::BuildOpenStreetMapTile(const GPSLocation &g)
                 }
 
                 const QString tileId = getTileId(zoom, tileX, tileY);
+                const int distance = std::max(std::abs(x - focusX), std::abs(y - focusY));
+                // Cover the immediate view with base tiles before filling in detail and the outer base grid.
+                const int priority = bFirst ? (distance <= 1 ? distance : 10 + distance) : 2 + distance;
 
                 auto it = _tiles.find(tileId);
 
                 if( it == _tiles.end())
                 {
                     Tile t;
+                    t.downloadPriority = priority;
 
                     addPts(t, tL, tR, bL, bR, tileLayer.second.offsetHeight);
                     _tiles[tileId] = std::move(t);
@@ -583,6 +617,7 @@ void Flat3DSphere::BuildOpenStreetMapTile(const GPSLocation &g)
                 {
                     Tile& t= it->second;
                     t.bRequired = true;
+                    t.downloadPriority = priority;
 
                     retryTile(zoom, tileX, tileY);
 
@@ -814,8 +849,7 @@ void Flat3DSphere::resetTiles()
     _tiles.clear();
     _lastDetailZoom = 0;
     _downloadTimer->stop();
-    _baseDownloads.clear();
-    _detailDownloads.clear();
+    _tileDownloads.clear();
     while (!_unrealisedTextures.empty())
         discardPendingTile(_unrealisedTextures.begin()->first);
     _bDirty = true;

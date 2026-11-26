@@ -82,8 +82,7 @@ private:
     QTimer* _timer =nullptr;
     QTimer* _downloadTimer = nullptr;
     using TileDownload = std::pair<QString, int>;
-    std::deque<TileDownload> _baseDownloads;
-    std::deque<TileDownload> _detailDownloads;
+    std::deque<TileDownload> _tileDownloads;
     QDeadlineTimer _serverCooldown;
     int _downloadsInFlight = 0;
     OpenGLShaderProgram _multTexShader;
@@ -106,6 +105,7 @@ private:
     {
         Tile();
         bool bRequired=true;
+        int downloadPriority = 0;
         std::shared_ptr<QOpenGLTexture> tex;
         void addGPSPoint(const GPSLocation& origin, const GPSLocation& gps, float offsetY=0);
         void editGPSPoint(size_t idx, const GPSLocation& origin, const GPSLocation& gps, float offsetY=0);
